@@ -1,0 +1,67 @@
+.nav-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background-color: rgb(115,159,240);
+  list-style-type: none;
+  font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif;
+}
+
+.app-title {
+  font-size: 30px;
+  padding: 0px 10px;
+  color: rgb(240, 237, 237);
+}
+
+.app-title-deco {
+  display: flex;
+  flex-direction: row-reverse;
+  list-style: none;
+  padding: 0px 10px;
+  margin: 0;
+}
+
+.app-title-deco > li {
+  font-size: 9px;
+  padding: 0px 2px;
+  margin: none;
+}
+
+#green-dot {color: rgba(100,238,132,255)}
+#yellow-dot {color: rgb(251,212,111)}
+#red-dot {color: rgb(251,148,149)}
+
+
+.nav-link {
+  text-decoration: none;
+}
+
+
+.profile-button {
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+  margin-right: 20px;
+}
+
+.profile-dropdown {
+  border: 1px solid rgba(131,168,255,255);
+  border-radius: 5%;
+  padding: 5px;
+  position: absolute;
+  list-style-type: none;
+  background-color: white;
+  right: 40px;
+  top: 50px;
+}
+
+.login-signup {
+  font-size: 10px;
+
+}
+
+.login-signup:hover {
+  cursor: grab
+}
