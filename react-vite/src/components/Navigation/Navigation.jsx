@@ -13,9 +13,9 @@ function Navigation() {
           <NavLink className='nav-link' to="/">
             <span className='app-title'>Altab</span>
             <ul className='app-title-deco'>
-              <li id='red-dot'>⬤</li>
-              <li id='yellow-dot'>⬤</li>
               <li id='green-dot'>⬤</li>
+              <li id='yellow-dot'>⬤</li>
+              <li id='red-dot'>⬤</li>
             </ul>
           </NavLink>
         </div>

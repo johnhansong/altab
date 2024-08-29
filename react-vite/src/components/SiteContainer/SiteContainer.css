@@ -1,0 +1,37 @@
+.site-container-btns {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+  max-width: 300px;
+}
+
+.sc-circle-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: transparent;
+  font-size: 0px;
+  transition: width 0.1s ease, border-radius 0.3s ease, background-color 0.3s ease; /* Smooth transition */
+  text-align: center;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+
+#sc-red-btn {background-color: rgb(251,148,149);}
+#sc-yellow-btn {background-color: rgb(251,212,111);}
+#sc-green-btn {background-color: rgba(100,238,132,255);}
+
+.sc-circle-btn:hover {
+  width: 45px;
+  border-radius: 25px;
+  color: white;
+  font-size: 12px;
+}
+
+.sc-circle-btn:focus {
+  outline: none;
+}
