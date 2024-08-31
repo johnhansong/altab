@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from app.models import Website
+from app.models import Website, db
+from app.forms import WebsiteForm
 
 website_routes = Blueprint('sites', __name__)
 
@@ -22,15 +23,38 @@ def get_website_details(website_id):
 
   return {'website': website.to_dict()}, 200
 
+# @website_routes.route('/')
+# @login_required
+# def get_websites_by_user():
+  """"""
+#   user_id = current_user.id
+
+#   user_sites = Website.query.filter_by(user_id=user_id).all()
+#   if not user_sites:
+#     return {'errors': {'message': 'No websites uploaded by this user'}}, 404
+
+#   return {'websites': [site.to_dict() for site in user_sites]}, 200
 
 
-@website_routes.route('/')
+@website_routes.route('/', methods=['POST'])
 @login_required
-def get_websites_by_user():
-  user_id = current_user.id
+def post_website():
+  """Create New Website """
+  form = WebsiteForm()
+  form['csrf_token'].data = request.cookies['csrf_token']
 
-  user_sites = Website.query.filter_by(user_id=user_id).all()
-  if not user_sites:
-    return {'errors': {'message': 'No websites uploaded by this user'}}, 404
+  if form.validate_on_submit():
+    new_site = Website(
+      user_id = current_user.id,
+      name=form.name.data,
+      link=form.link.data,
+      description=form.description.data,
+      preview_img=form.preview_img.data
+    )
 
-  return {'websites': [site.to_dict() for site in user_sites]}, 200
+    db.session.add(new_site)
+    db.session.commit()
+
+    return new_site.to_dict(), 201
+
+  return {'errors': form.errors}, 400
