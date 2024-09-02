@@ -3,6 +3,7 @@ import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
 import LandingPage from '../components/LandingPage';
 import SiteDetailsPage from '../components/SiteDetailsPage';
+import AddSite from '../components/AddSitePage';
 import Layout from './Layout';
 
 export const router = createBrowserRouter([
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: "/sites/:siteId",
         element: <SiteDetailsPage />
+      },
+      {
+        path: "/sites/add",
+        element: <AddSite />
       }
     ],
   },

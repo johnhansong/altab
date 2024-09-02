@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink, useNavigate } from 'react-router-dom';
 import { fetchAllSites } from '../../redux/websiteReducer';
 import SiteContainer from '../SiteContainer';
-import { randomizeArray } from '../../../helper';
+import { randomizeArray, limitString } from '../../../bandaid';
 
 import './LandingPage.css'
 
@@ -26,7 +26,7 @@ function LandingPage() {
   }
 
   const buttonHandle = {
-    "redBtnText": "More",
+    "redBtnText": "Details",
     "yellowBtnText": "Add",
     "greenBtnText": "Visit",
     "redBtnHandle": handleRedBtn,
@@ -54,11 +54,17 @@ function LandingPage() {
             <span className="loading"> Loading... </span>
                 :
               <>
-                {featuredSites.map(site => (
-                  <div key={site.id} className="lp-site-item">
-                    <SiteContainer siteDetails={site} className="landing-page" btnHandle={buttonHandle}/>
-                  </div>
-                ))}
+                {featuredSites.map(site => {
+                  if (site.description.length > 115) {
+                    site["description"] = limitString(site.description, 110)
+                  }
+
+                  return (
+                    <div key={site.id} className="lp-site-item">
+                      <SiteContainer siteDetails={site} className="landing-page" btnHandle={buttonHandle}/>
+                    </div>
+                  )}
+                )}
               </>}
           </div>
       </section>
