@@ -28,7 +28,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/sites/add",
-        element: <AddSite />
+        element: <AddSite toggle={'create'}/>
+      },
+      {
+        path: "/sites/:siteId/edit",
+        element: <AddSite toggle={'update'}/>
       }
     ],
   },

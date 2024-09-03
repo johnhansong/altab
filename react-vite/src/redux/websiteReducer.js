@@ -1,28 +1,36 @@
 //*------ACTION TYPES---------
 const GET_ALL_SITES = '/site/GET_SITES'
 const GET_ONE_SITE = '/site/GET_ONE_SITE'
-const POST_SITE = '/site/POST_SITE'
+const ADD_SITE = '/site/ADD_SITE'
+const DELETE_SITE = '/site/DELETE_SITE'
 
 
 //*-------ACTION CREATORS---------
-export const loadAllSites = (websites) => {
+const loadAllSites = (websites) => {
   return {
     type: GET_ALL_SITES,
     payload: websites
   }
 }
 
-export const loadOneSite = (website) => {
+const loadOneSite = (website) => {
   return {
     type: GET_ONE_SITE,
     payload: website
   }
 }
 
-export const addSite = (website) => {
+const addSite = (website) => {
   return {
-    type: POST_SITE,
+    type: ADD_SITE,
     payload: website
+  }
+}
+
+const doomedWebsite = (websiteId) => {
+  return {
+    type: DELETE_SITE,
+    websiteId
   }
 }
 
@@ -70,6 +78,30 @@ export const createSite = (website) => async (dispatch) => {
   }
 }
 
+export const updateWebsite = (website, websiteId) = async (dispatch) => {
+  const res = await fetch(`/api/sites/${websiteId}`, {
+    method: "PUT",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(website)
+  });
+
+  if (res.ok) {
+    const updatedSite = await res.json()
+    dispatch(addSite(updatedSite));
+    return updatedSite
+  }
+}
+
+export const destroyWebsite = (websiteId) => async (dispatch) => {
+  const res = await fetch(`/api/sites/${websiteId}`, {
+    method: "DELETE"
+  });
+
+  if (res.ok) {
+    dispatch(doomedWebsite())
+  }
+}
+
 
 //*---------REDUCERS-----------
 const initialState = {allSites: {}, oneSite: {}}
@@ -82,15 +114,25 @@ const websiteReducer = (state=initialState, action) => {
     case GET_ONE_SITE:
       return {...state, oneSite: {...action.payload}}
 
-    case POST_SITE:
+    case ADD_SITE:
       return {
         ...state,
         allSites: {
-          ...state, allSites,
+          ...state.allSites,
           [action.payload.id]: action.payload
         },
-        oneGroup: {...action.payload}
+        oneSite: {...action.payload}
       }
+
+    case DELETE_SITE: {
+      const newState = {
+        ...state,
+        allSites: {...state.allSites},
+        oneSite: {}
+      }
+      delete newState.allSites[action.websiteId]
+      return newState
+    }
 
     default: return state;
   }

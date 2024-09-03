@@ -58,3 +58,45 @@ def post_website():
     return new_site.to_dict(), 201
 
   return {'errors': form.errors}, 400
+
+
+
+@website_routes.route('/<int:website_id>', method=['PUT'])
+@login_required
+def update_site(website_id):
+  site_to_update = Website.query.filter(Website.id == website_id).first()
+
+  if not site_to_update:
+    return {'errors': {'message': 'Website not found'}}, 404
+  if site_to_update.user_id != current_user.id:
+    return {'errors': {'message': 'Unauthorized'}}, 401
+
+  form = WebsiteForm()
+  form['csrf_token'].data = request.cookies['csrf_token']
+
+  if form.validate_on_submit():
+    site_to_update.user_id = current_user.id,
+    site_to_update.name=form.name.data,
+    site_to_update.link=form.link.data,
+    site_to_update.description=form.description.data,
+    site_to_update.preview_img=form.preview_img.data
+
+    db.session.commit()
+    return site_to_update.to_dict(), 201
+
+  return {'errors': form.errors}, 400
+
+@website_routes.route('/<int:website_id>', method=['DELETE'])
+@login_required
+def delete_website(website_id):
+  doomed_site = Website.query.get(website_id)
+
+  if not doomed_site:
+    return {'errors': {'message': 'Website not found'}}, 404
+  if doomed_site.id != current_user.id:
+    return {'errors': {'message': 'Unauthorized'}}, 401
+
+  db.session.delete(doomed_site)
+  db.session.commit()
+
+  return {'message': 'Website deleted successfully'}

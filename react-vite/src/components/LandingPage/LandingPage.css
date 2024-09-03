@@ -9,19 +9,27 @@
   font-size: 28px;
 }
 
-.lp-block-1-btns > a {
+.lp-block-1-btns {
+  height: 28px;
+}
+
+.lp-block1-btn {
   text-decoration: none;
   color: rgb(99,123,251);
-  font-weight:200;
+  background-color: white;
+  font-size: 16px;
+  font-weight: lighter;
   margin: 0px 5px;
   padding: 4px 6px;
   border: 1px solid rgb(115,159,240);
   border-radius: 10px;
+  list-style: none;
 }
 
-.lp-block-1-btns > a:hover {
+.lp-block1-btn:hover {
   color: white;
   background-color: rgb(115,159,240);
+  cursor: pointer;
 }
 
 

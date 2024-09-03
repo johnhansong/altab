@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchAllSites } from '../../redux/websiteReducer';
 import SiteContainer from '../SiteContainer';
+import OpenModalButton from '../OpenModalButton'
+import LoginFormModal from '../LoginFormModal';
 import { randomizeArray, limitString } from '../../../bandaid';
 
 import './LandingPage.css'
@@ -11,6 +13,7 @@ function LandingPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const websites = useSelector((state) => state.websites.allSites)
+  const sessionUser = useSelector((state) => state.session.user)
   const featuredSites = websites.length < 7 ? randomizeArray(Object.values(websites), websites.length) : randomizeArray(Object.values(websites), 6)
 
   const handleRedBtn = (siteId) => {
@@ -43,8 +46,23 @@ function LandingPage() {
       <section className="landing-page-block-1">
         <h1>A Bookmarks Bar for Everyone.</h1>
         <div className="lp-block-1-btns">
-          <NavLink>Explore Websites</NavLink>
-          <NavLink>Upload a Cool Website</NavLink>
+          <button
+            className="lp-block1-btn"
+          >Explore Websites</button>
+
+          {sessionUser ?
+            <button
+              className="lp-block1-btn"
+              type="button"
+              onClick={() => navigate("/sites/add")}
+            >Upload a Website</button>
+            :
+            <OpenModalButton
+              className="lp-block1-btn"
+              modalComponent={<LoginFormModal />}
+              buttonText="Upload a Website"
+            ></OpenModalButton>
+          }
         </div>
       </section>
 
