@@ -78,7 +78,7 @@ export const createSite = (website) => async (dispatch) => {
   }
 }
 
-export const updateWebsite = (website, websiteId) = async (dispatch) => {
+export const updateWebsite = (website, websiteId) => async (dispatch) => {
   const res = await fetch(`/api/sites/${websiteId}`, {
     method: "PUT",
     headers: {"Content-Type": "application/json"},

@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
 
     #relationships
     websites = db.relationship('Website', back_populates='user')
+    reviews = db.relationship('Review', back_populates='user')
 
 
     @property

@@ -1,14 +1,26 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { fetchOneSite } from "../../redux/websiteReducer"
+import { destroyWebsite } from "../../redux/websiteReducer"
 import "./SiteDetailsPage.css"
 
 const SiteDetailsPage = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const {siteId} = useParams()
   const currSite = useSelector((state) => state.websites.oneSite)
   const sessionUser = useSelector((state) => state.session.user)
+
+  const handleUpdateBtn = async (e) => {
+    e.preventDefault();
+    navigate(`/sites/${siteId}/edit`)
+  }
+
+  const handleDeleteBtn = async (e) => {
+    e.preventDefault();
+    return dispatch(destroyWebsite(siteId)).then(navigate('/'))
+  }
 
   useEffect(() => {
     dispatch(fetchOneSite(siteId))
@@ -47,11 +59,12 @@ const SiteDetailsPage = () => {
 
                 <button className="sd-circle-btn"
                         id="sd-yellow-btn"
+                        onClick={handleUpdateBtn}
                 >Edit</button>
 
                 <button className="sd-circle-btn"
                         id="sd-red-btn"
-                        // onClick={() => btnHandle.redBtnHandle(siteDetails.id)}
+                        onClick={handleDeleteBtn}
                 >Delete</button>
 
               </div>
@@ -63,7 +76,7 @@ const SiteDetailsPage = () => {
 
                 <button className="sd-circle-btn"
                         id="sd-green-btn"
-                        // onClick={() => btnHandle.greenBtnHandle(siteDetails.link)}
+                        onClick=""
                 ></button>
               </div>
             }

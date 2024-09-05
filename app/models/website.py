@@ -19,7 +19,7 @@ class Website(db.Model):
 
   #relationships
   user = db.relationship('User', back_populates='websites')
-
+  reviews = db.relationship('Review', back_populates='website')
 
   def to_dict(self):
     return {

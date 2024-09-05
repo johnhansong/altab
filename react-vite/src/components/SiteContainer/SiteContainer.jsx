@@ -39,7 +39,7 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
 
       <div className={`${className}-site-con-info`}>
         <img className={`${className}-site-con-img`}
-            src={siteDetails.preview_img.length ? siteDetails.link : "./template.png"}
+            src={siteDetails.preview_img?.length ? siteDetails.link : "./template.png"}
         />
 
         <div className={`${className}-site-con-details`}>

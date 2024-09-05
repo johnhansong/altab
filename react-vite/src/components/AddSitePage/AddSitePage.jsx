@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { createSite } from '../../redux/websiteReducer'
+import { fetchOneSite } from '../../redux/websiteReducer'
 import OpenModalButton from '../OpenModalButton'
 import LoginFormModal from '../LoginFormModal'
 import './AddSitePage.css'
@@ -10,11 +11,20 @@ function AddSite ({toggle}) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const sessionUser = useSelector((state) => state.session.user)
+  const sessionSite = useSelector((state) => state.websites.oneSite)
+  const { siteId } = useParams();
 
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [link, setLink] = useState("")
-  const [image, setImage] = useState("")
+  console.log("SESHSITE",  sessionSite.user_id)
+
+  useEffect(() => {
+    dispatch(fetchOneSite(siteId))
+  }, [dispatch, siteId])
+
+
+  const [name, setName] = useState( siteId ? sessionSite.name : "")
+  const [description, setDescription] = useState( siteId ? sessionSite.description : "")
+  const [link, setLink] = useState( siteId ? sessionSite.link : "")
+  const [image, setImage] = useState( siteId ? sessionSite.image : "")
   const [errors, setErrors] = useState({})
 
   const handleName = (e) => setName(e.target.value)
@@ -64,86 +74,94 @@ function AddSite ({toggle}) {
       }
   }
 
+  const siteExists = Object.values(sessionSite).length
 
-  if (toggle == 'create') {
-      return (
-        <div className="create-site-form-wrapper">
-          <header>
-            <h1 className="addsite-header">Add a new website</h1>
-          </header>
+  if (toggle == 'update' && sessionSite.user_id !== sessionUser.id) {
+    return (
+      <div>
+        Unauthorized
+      </div>
+    )
+  }
 
-          <div className="addsite-form-wrapper">
-              <div className="addsite-form-text">
-                <p className="addsite-intro">All the websites on Altab were saved by people like you. Now&apos;s your chance to add your own!</p>
-                <p className="addsite-advisory">Please be sure to adhere to the following guideline when posting your site</p>
-                <ol>
-                  <li>Don&apos;t post malicious links or scams</li>
-                  <li>Don&apos;t post personal information</li>
-                  <li>Do post fun or useful websites</li>
-                </ol>
-              </div>
+  return (
+    <div className="create-site-form-wrapper">
+      <header>
+        <h1 className="addsite-header">{siteExists ? "Update Your Website" : "Add a new website"}</h1>
+      </header>
 
-            <form className="addsite-form" onSubmit={handleSubmit}>
-              <div className="addsite-input">
-                <input
-                  onChange={handleName}
-                  placeholder='Website Name'
-                ></input>
-                <p>{errors.name}</p>
-              </div>
-
-              <div className="addsite-input">
-                <textarea
-                  onChange={handleDescription}
-                  placeholder='Website Description'
-                ></textarea>
-                <p>{errors.description}</p>
-              </div>
-
-              <div className="addsite-input">
-                <input
-                  onChange={handleLink}
-                  placeholder='Website Link'
-                ></input>
-                <p>{errors.link}</p>
-              </div>
-
-              <div className="addsite-input">
-                <input
-                  onChange={handleImage}
-                  placeholder='Website Image Url'
-                ></input>
-                <p>{errors.image}</p>
-              </div>
-
-              <div className="addsite-submit-btns">
-                { !sessionUser ?
-                    <OpenModalButton
-                      className="addsite-form-submit-btn"
-                      modalComponent={LoginFormModal}
-                      buttonText="Log In"
-                    ></OpenModalButton>
-                :
-                  <button className="addsite-form-submit-btn" type="submit">
-                    Submit!
-                  </button>
-                }
-              </div>
-
-            </form>
+      <div className="addsite-form-wrapper">
+          <div className="addsite-form-text">
+            <p className="addsite-intro">
+              { !siteExists &&
+                "All the websites on Altab were saved by people like you. Now's your chance to add your own!"
+              }
+            </p>
+            <p className="addsite-advisory">Please be sure to adhere to the following guideline when {siteExists ? "updating" : "posting"} your site</p>
+            <ol>
+              <li>Don&apos;t post malicious links or scams</li>
+              <li>Don&apos;t post personal information</li>
+              <li>Do post fun or useful websites</li>
+            </ol>
           </div>
-        </div>
-      )
-    }
 
+        <form className="addsite-form" onSubmit={handleSubmit}>
+          <div className="addsite-input">
+            <input
+              onChange={handleName}
+              placeholder='Website Name'
+              defaultValue={name}
+            ></input>
+            <p>{errors.name}</p>
+          </div>
 
-    if (toggle === "update") {
-      return(
-        <div>
-          Hello from edit
-        </div>
-      )
-    }
+          <div className="addsite-input">
+            <textarea
+              onChange={handleDescription}
+              placeholder='Website Description'
+              defaultValue={description}
+            ></textarea>
+            <p>{errors.description}</p>
+          </div>
+
+          <div className="addsite-input">
+            <input
+              onChange={handleLink}
+              placeholder='Website Link'
+              defaultValue={link}
+            ></input>
+            <p>{errors.link}</p>
+          </div>
+
+          <div className="addsite-input">
+            <input
+              onChange={handleImage}
+              placeholder='Website Image Url'
+              defaultValue={image}
+            ></input>
+            <p>{errors.image}</p>
+          </div>
+
+          <div className="addsite-submit-btns">
+            { !sessionUser ?
+                <OpenModalButton
+                  className="addsite-form-submit-btn"
+                  modalComponent={LoginFormModal}
+                  buttonText="Log In"
+                ></OpenModalButton>
+            :
+              <button className="addsite-form-submit-btn" type="submit">
+                { siteExists ? "Update!"
+                            : "Submit!"
+                }
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+
   }
 
 export default AddSite
