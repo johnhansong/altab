@@ -109,9 +109,9 @@ def delete_website(website_id):
 
 #review routes
 @website_routes.route('<int:website_id>/reviews')
-def site_reviews(site_id):
+def site_reviews(website_id):
   """GET all reviews for a website"""
-  site_reviews = Review.query.filter_by(website_id=site_id).all()
+  site_reviews = Review.query.filter_by(website_id=website_id).all()
 
   if not site_reviews:
     return {'errors': {'message': 'No reviews found'}}, 404
@@ -128,7 +128,7 @@ def post_review(website_id):
   if not curr_site:
     return {'errors': {'message': 'Website not found'}}, 404
 
-  review_exists = Review.query.filter_by(user_id=current_user.id, website_id=website_id)
+  review_exists = Review.query.filter_by(user_id=current_user.id, website_id=website_id).first()
   if review_exists:
     return {'error': {'message': 'There is an existing review for this website.'}}, 400
 
@@ -139,8 +139,8 @@ def post_review(website_id):
     new_review = Review(
       user_id=current_user.id,
       website_id=website_id,
-      rating=form.data.rating,
-      review=form.data.review
+      rating=form.rating.data,
+      review=form.review.data
     )
 
     db.session.add(new_review)
@@ -148,3 +148,4 @@ def post_review(website_id):
     return new_review.to_dict(), 201
 
   return form.errors, 401
+
