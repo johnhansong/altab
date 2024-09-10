@@ -98,7 +98,7 @@ export const destroyWebsite = (websiteId) => async (dispatch) => {
   });
 
   if (res.ok) {
-    dispatch(doomedWebsite())
+    dispatch(doomedWebsite(websiteId))
   }
 }
 

@@ -14,12 +14,9 @@ function AddSite ({toggle}) {
   const sessionSite = useSelector((state) => state.websites.oneSite)
   const { siteId } = useParams();
 
-  console.log("SESHSITE",  sessionSite.user_id)
-
   useEffect(() => {
     dispatch(fetchOneSite(siteId))
   }, [dispatch, siteId])
-
 
   const [name, setName] = useState( siteId ? sessionSite.name : "")
   const [description, setDescription] = useState( siteId ? sessionSite.description : "")

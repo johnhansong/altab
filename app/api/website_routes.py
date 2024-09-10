@@ -139,6 +139,7 @@ def post_review(website_id):
     new_review = Review(
       user_id=current_user.id,
       website_id=website_id,
+      title=form.title.data,
       rating=form.rating.data,
       review=form.review.data
     )
@@ -148,4 +149,3 @@ def post_review(website_id):
     return new_review.to_dict(), 201
 
   return form.errors, 401
-

@@ -1,35 +1,43 @@
+.site-details-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .site-details-block {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-
+  margin-top: 40px;
 }
 
 .site-details-img {
   display: flex;
   margin-top: 0px;
+  border: 1px solid;
   width: 500px;
   height: 350px;
   object-fit: cover;
-  margin-right: 2%;
+  margin-right: 3%;
 }
 
 .site-details {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-left: 2%;
+  margin-left: 3%;
   width: 350px;
   height: 350px;
 }
 
 .site-details-info > h2 {
-  margin-top: 15px;
+  margin-top: 8px;
   margin-bottom: 5px;
 }
 
 .site-details-info > p {
   margin-top: 5px;
+  font-size: 14px;
 }
 
 .site-details-info-sections {
@@ -37,22 +45,27 @@
   flex-direction: column;
 }
 
+.site-details-info-sections > p {
+  font-size: 14px;
+}
+
 .site-details-description {
   border: 1px solid;
   border-radius: 5px;
+  background-color: white;
   padding: 6px;
-  height: 120px;
+  height: 140px;
 }
 
 .site-details-description > h4 {
   margin-top: 0px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .site-details-description > p {
   margin-bottom: 0px;
+  font-size: 14px;
 }
-
 
 
 .site-details-btns {
@@ -87,4 +100,21 @@
 
 .sd-circle-btn:focus {
   outline: none;
+}
+
+
+.site-reviews-block {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8%;
+  margin-bottom: 5%;
+  border: 1px solid;
+  width: 850px;
+}
+
+.site-reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 15px;
 }

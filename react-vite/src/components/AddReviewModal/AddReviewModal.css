@@ -1,0 +1,47 @@
+.add-review-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  height: 400px;
+}
+
+.add-review-rating {
+  direction: rtl;
+  display: inline-block;
+  font-size: 1rem;
+  position: relative;
+}
+
+.add-review-rating input[type="radio"] {
+  display: none;
+}
+
+.add-review-rating label {
+  cursor: pointer;
+  color: lightgray;
+  font-size: 1.5rem;
+}
+
+.add-review-rating label:before {
+  content: "★"
+}
+
+.add-review-rating input[type="radio"]:checked ~ label {
+  color: gold;
+}
+
+.add-review-rating label:hover,
+.add-review-rating label:hover ~ label {
+  color: gold;
+}
+
+.review-title {
+  height: 30px;
+  width: 348px;
+}
+
+.review-textarea {
+  height: 130px;
+  width: 350px;
+}

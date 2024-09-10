@@ -12,7 +12,7 @@ const growFirstLtr = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-const isValidUrl = (string) => {
+const isValidUrl = (url) => {
   try {
       new URL(url)
       return true;
