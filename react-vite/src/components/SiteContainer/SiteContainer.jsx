@@ -14,9 +14,9 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
 
   // console.log("BTNHANDLE", btnHandle.greenBtnHandle)
 
-  const [redBtnText, setRedBtnText] = useState(btnHandle.redBtnText ? btnHandle.redBtnText : "")
-  const [yellowBtnText, setYellowBtnText] = useState(btnHandle.yellowBtnText ? btnHandle.yellowBtnText : "")
-  const [greenBtnText, setGreenBtnText] = useState(btnHandle.greenBtnText ? btnHandle.greenBtnText : "")
+  const [redBtnText] = useState(btnHandle.redBtnText ? btnHandle.redBtnText : "")
+  const [yellowBtnText] = useState(btnHandle.yellowBtnText ? btnHandle.yellowBtnText : "")
+  const [greenBtnText] = useState(btnHandle.greenBtnText ? btnHandle.greenBtnText : "")
 
 
   return (

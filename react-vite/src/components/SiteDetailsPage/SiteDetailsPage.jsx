@@ -16,7 +16,6 @@ const SiteDetailsPage = () => {
   const sessionUser = useSelector((state) => state.session.user)
   const siteReviews = useSelector((state) => state.reviews.siteReviews)
 
-
   const siteReviewsArr = Object.values(siteReviews)
   const avgRating = siteReviewsArr.reduce((acc, review) => {
     return acc + review.rating;
@@ -37,6 +36,7 @@ const SiteDetailsPage = () => {
     dispatch(fetchSiteReviews(siteId))
   }, [dispatch, siteId])
 
+  const userReview = siteReviewsArr.filter(review => review.user_id == sessionUser.id)
 
   return (
     <span className="site-details-wrapper">
@@ -48,7 +48,7 @@ const SiteDetailsPage = () => {
           <div className="site-details-info">
             <h2>{currSite.name}</h2>
             <p>
-              ⭐ {avgRating}/5
+              {avgRating ? `⭐ ${avgRating}/5` : "⭐ " }
               ({siteReviewsArr.length} {siteReviewsArr.length == 1 ? "Review" : "Reviews"})
             </p>
 
@@ -114,10 +114,14 @@ const SiteDetailsPage = () => {
           </div>
 
           <div>
-            <OpenModalButton
-              buttonText="Add Review"
-              modalComponent={<AddReviewModal websiteId={siteId} reviewId={null}/>}
-            ></OpenModalButton>
+            {userReview.length == 0 ?
+              <OpenModalButton
+                buttonText="Add Review"
+                modalComponent={<AddReviewModal websiteId={siteId} reviewId={null}/>}
+              ></OpenModalButton>
+              :
+              null
+            }
           </div>
         </div>
 

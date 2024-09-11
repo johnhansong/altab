@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { destroyReview } from "../../redux/reviewReducer";
 import OpenModalButton from "../OpenModalButton";
+import AddReviewModal from "../AddReviewModal/AddReviewModal";
 
 import "./ReviewContainer.css"
 
@@ -14,6 +15,7 @@ const ReviewContainer = ({review}) => {
     return dispatch(destroyReview(review.id))
   }
 
+
   return (
     <span key={review.id} className="review-wrapper">
       <div className="review-container">
@@ -22,7 +24,7 @@ const ReviewContainer = ({review}) => {
           <div className="review-header-user-info">
             <h4>(UserName goes here)</h4>
             <p>Reviewed on {review.created_at.slice(0, 16)}
-              {isReviewUpdated && (<p>Edited {review.updated_at.slice(0, 16)}</p>)}
+              {isReviewUpdated && (<div className="review-edited-msg">Edited {review.updated_at.slice(0, 16)}</div>)}
             </p>
           </div>
 
@@ -34,6 +36,7 @@ const ReviewContainer = ({review}) => {
                 <OpenModalButton
                   className="review-btn"
                   buttonText="Edit"
+                  modalComponent={<AddReviewModal websiteId={review.website_id} reviewId={review.id}/>}
                 ></OpenModalButton>
 
                 <button

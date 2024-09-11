@@ -19,6 +19,16 @@ def get_user_reviews():
   return {'reviews': [review.to_dict() for review in user_reviews]}, 200
 
 
+@review_routes.route('/<int:review_id>')
+@login_required
+def get_review_by_id(review_id):
+  review = Review.query.get(review_id)
+
+  if not review:
+    return {'errors': {'message': 'Review not found'}}, 404
+
+  return review.to_dict(), 201
+
 @review_routes.route("/<int:review_id>", methods=["PUT"])
 @login_required
 def update_review(review_id):

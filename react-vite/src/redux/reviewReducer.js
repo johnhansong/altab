@@ -78,6 +78,29 @@ export const createReview = (siteId, review) => async (dispatch) => {
   }
 }
 
+export const updateReview = (reviewId, review) => async (dispatch) => {
+  try {
+    const res = await fetch(`/api/review/${reviewId}`, {
+      method: "PUT",
+      body: JSON.stringify(review),
+      headers: { "Content-Type": "application/json" }
+    })
+
+    if (res.ok) {
+      const updatedReview = await res.json()
+      dispatch(addReview(updatedReview))
+      return updatedReview
+    } else {
+      const errorData = await res.json()
+      console.error("Error updating review", errorData);
+      throw new Error(errorData.message || "Error submitting review")
+    }
+  } catch(err) {
+    console.error("Error creating review", err)
+    throw err;
+  }
+}
+
 export const destroyReview = (reviewId) => async (dispatch) => {
   const res = await fetch(`/api/review/${reviewId}`, {
     method: "DELETE"

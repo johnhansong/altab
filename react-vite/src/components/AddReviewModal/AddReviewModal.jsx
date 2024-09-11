@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux"
-import { fetchReview, createReview } from "../../redux/reviewReducer";
+import { fetchReview, createReview, updateReview } from "../../redux/reviewReducer";
 import { useModal } from "../../context/Modal";
 
 import './AddReviewModal.css'
@@ -11,14 +11,14 @@ const AddReviewModal = ({websiteId, reviewId}) => {
   const { closeModal } = useModal();
 
   useEffect(() => {
-    if(Object.values(currReview).length > 0) {
+    if(reviewId) {
       dispatch(fetchReview(reviewId))
     }
-  }, [dispatch, reviewId, currReview])
+  }, [dispatch, reviewId])
 
-  const [title, setTitle] = useState("")
-  const [rating, setRating] = useState(0)
-  const [review, setReview] = useState("")
+  const [title, setTitle] = useState(reviewId ? currReview.title : "")
+  const [rating, setRating] = useState(reviewId ? currReview.rating : 0)
+  const [review, setReview] = useState(reviewId ? currReview.review : "")
   const [errors, setErrors] = useState({})
 
   const handleTitle = (e) => setTitle(e.target.value)
@@ -44,16 +44,26 @@ const AddReviewModal = ({websiteId, reviewId}) => {
     } else if (review.length > 2000) {
       error.reviews = "Review must not exceed 2000 characters"}
 
-
-    const payload = {
-      "title": title,
-      "rating": rating,
-      "review": review
+    if (Object.keys(error).length > 0) {
+      setErrors(error);
+      return;
     }
 
+    const payload = {
+      title,
+      rating,
+      review
+    }
+
+    let reviewPayload
     try {
-      const newReview = await dispatch(createReview(websiteId, payload))
-      if (newReview) {
+      if (!reviewId) {
+        reviewPayload = await dispatch(createReview(websiteId, payload))
+      } else {
+        reviewPayload = await dispatch(updateReview(reviewId, payload))
+      }
+
+      if (reviewPayload) {
         closeModal()
       }
 
@@ -68,16 +78,40 @@ const AddReviewModal = ({websiteId, reviewId}) => {
 
   return (
     <span className="add-review-form-wrapper">
-      <h2>Add a Review</h2>
+      <h2>{reviewId ? "Update Review" : "Add a Review" }</h2>
 
       <form className="add-review-form" onSubmit={handleSubmit}>
 
         <div className="add-review-rating">
-          <input type='radio' id='star5' name='rating' onClick={() => setRating(5)} /> <label htmlFor="star5" title="5 stars"></label>
-          <input type='radio' id='star4' name='rating' onClick={() => setRating(4)} /> <label htmlFor="star4" title="4 stars"></label>
-          <input type='radio' id='star3' name='rating' onClick={() => setRating(3)} /> <label htmlFor="star3" title="3 stars"></label>
-          <input type='radio' id='star2' name='rating' onClick={() => setRating(2)} /> <label htmlFor="star2" title="2 stars"></label>
-          <input type='radio' id='star1' name='rating' onClick={() => setRating(1)} /> <label htmlFor="star1" title="1 stars"></label>
+          <input
+            type='radio' id='star5' name='rating'
+            onClick={() => setRating(5)} onChange={() => {}}
+            checked={rating === 5}
+          /> <label htmlFor="star5" title="5 stars"></label>
+
+          <input
+            type='radio' id='star4' name='rating'
+            onClick={() => setRating(4)} onChange={() => {}}
+            checked={rating === 4}
+          /> <label htmlFor="star4" title="4 stars"></label>
+
+          <input
+            type='radio' id='star3' name='rating'
+            onClick={() => setRating(3)} onChange={() => {}}
+            checked={rating === 3}
+          /> <label htmlFor="star3" title="3 stars"></label>
+
+          <input
+            type='radio' id='star2' name='rating'
+            onClick={() => setRating(2)} onChange={() => {}}
+            checked={rating === 2}
+          /> <label htmlFor="star2" title="2 stars"></label>
+
+          <input
+            type='radio' id='star1' name='rating'
+            onClick={() => setRating(1)} onChange={() => {}}
+            checked={rating === 1}
+          /> <label htmlFor="star1" title="1 stars"></label>
         </div>
         <p>{errors.rating}</p>
 
