@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { createSite } from '../../redux/websiteReducer'
+import { createSite, updateWebsite } from '../../redux/websiteReducer'
 import { fetchOneSite } from '../../redux/websiteReducer'
 import OpenModalButton from '../OpenModalButton'
 import LoginFormModal from '../LoginFormModal'
@@ -58,7 +58,12 @@ function AddSite ({toggle}) {
       }
 
       try {
-        const newSite = await dispatch(createSite(payload))
+        let newSite;
+        if (siteId) {
+          newSite = await dispatch(updateWebsite(payload))
+        } else {
+          newSite = await dispatch(createSite(payload))
+        }
 
         if (newSite) {
           navigate(`/sites/${newSite.id}`)
@@ -96,47 +101,51 @@ function AddSite ({toggle}) {
             </p>
             <p className="addsite-advisory">Please be sure to adhere to the following guideline when {siteExists ? "updating" : "posting"} your site</p>
             <ol>
-              <li>Don&apos;t post malicious links or scams</li>
-              <li>Don&apos;t post personal information</li>
-              <li>Do post fun or useful websites</li>
+              <li className="addsite-advisory">Don&apos;t post malicious links or scams</li>
+              <li className="addsite-advisory">Don&apos;t post personal information</li>
+              <li className="addsite-advisory">Do post fun or useful websites</li>
             </ol>
           </div>
 
         <form className="addsite-form" onSubmit={handleSubmit}>
           <div className="addsite-input">
+            <h3>Website Title*</h3>
             <input
               onChange={handleName}
               placeholder='Website Name'
               defaultValue={name}
             ></input>
-            <p>{errors.name}</p>
+            <p className="error">{errors.name}</p>
           </div>
 
           <div className="addsite-input">
+          <h3>Website Description*</h3>
             <textarea
               onChange={handleDescription}
               placeholder='Website Description'
               defaultValue={description}
             ></textarea>
-            <p>{errors.description}</p>
+            <p className="error">{errors.description}</p>
           </div>
 
           <div className="addsite-input">
+          <h3>Website Link*</h3>
             <input
               onChange={handleLink}
               placeholder='Website Link'
               defaultValue={link}
             ></input>
-            <p>{errors.link}</p>
+            <p className="error">{errors.link}</p>
           </div>
 
           <div className="addsite-input">
+          <h3>Website Image</h3>
             <input
               onChange={handleImage}
               placeholder='Website Image Url'
               defaultValue={image}
             ></input>
-            <p>{errors.image}</p>
+            <p className="error">{errors.image}</p>
           </div>
 
           <div className="addsite-submit-btns">

@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, useNavigate } from "react-router-dom"
 import { fetchOneSite, destroyWebsite } from "../../redux/websiteReducer"
-import { fetchSiteReviews } from "../../redux/reviewReducer"
+import { fetchSiteReviews, fetchReview } from "../../redux/reviewReducer"
 import OpenModalButton from "../OpenModalButton"
 import ReviewContainer from "./ReviewContainer"
 import AddReviewModal from "../AddReviewModal/AddReviewModal"
@@ -11,9 +11,10 @@ import "./SiteDetailsPage.css"
 const SiteDetailsPage = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {siteId} = useParams()
+  const { siteId } = useParams()
   const currSite = useSelector((state) => state.websites.oneSite)
   const sessionUser = useSelector((state) => state.session.user)
+  const userId = sessionUser?.id
   const siteReviews = useSelector((state) => state.reviews.siteReviews)
 
   const siteReviewsArr = Object.values(siteReviews)
@@ -36,7 +37,15 @@ const SiteDetailsPage = () => {
     dispatch(fetchSiteReviews(siteId))
   }, [dispatch, siteId])
 
-  const userReview = siteReviewsArr.filter(review => review.user_id == sessionUser.id)
+  const userReview = siteReviewsArr.filter(review => review.user_id == userId)
+
+  console.log(userReview[0]?.id)
+
+  useEffect(() => {
+    if (userId && userReview[0]?.user_id == userId) {
+      dispatch(fetchReview(userReview[0].id))
+    }
+  }, [dispatch, userReview, userId, siteId])
 
   return (
     <span className="site-details-wrapper">
@@ -63,7 +72,7 @@ const SiteDetailsPage = () => {
           </div>
 
           <div className="site-details-btns">
-            {currSite.user_id === sessionUser?.id ?
+            {currSite.user_id === userId ?
               <div className="site-container-btns">
 
                 <button className="sd-circle-btn"
@@ -84,14 +93,14 @@ const SiteDetailsPage = () => {
               </div>
                 :
               <div>
-                <button className="sd-circle-btn"
+                {/* <button className="sd-circle-btn"
                       id="sd-yellow-btn"
-                ></button>
+                ></button> */}
 
                 <button className="sd-circle-btn"
                         id="sd-green-btn"
                         onClick={() => {window.location.href = `${currSite.link}`}}
-                ></button>
+                >Visit</button>
               </div>
             }
           </div>
@@ -114,7 +123,7 @@ const SiteDetailsPage = () => {
           </div>
 
           <div>
-            {userReview.length == 0 ?
+            {userId && userReview.length == 0 ?
               <OpenModalButton
                 buttonText="Add Review"
                 modalComponent={<AddReviewModal websiteId={siteId} reviewId={null}/>}
@@ -126,7 +135,7 @@ const SiteDetailsPage = () => {
         </div>
 
         <div className="user-review">
-          {(siteReviewsArr.length > 0) && siteReviewsArr.map(review => (
+          {(siteReviewsArr?.length > 0) && siteReviewsArr.map(review => (
             <div key={review.id} className="site-review">
               <ReviewContainer review={review}/>
             </div>

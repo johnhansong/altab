@@ -22,6 +22,7 @@ def get_user_reviews():
 @review_routes.route('/<int:review_id>')
 @login_required
 def get_review_by_id(review_id):
+  """Get a review by ID"""
   review = Review.query.get(review_id)
 
   if not review:

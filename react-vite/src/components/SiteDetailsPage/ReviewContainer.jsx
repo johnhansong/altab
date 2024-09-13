@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { destroyReview } from "../../redux/reviewReducer";
 import OpenModalButton from "../OpenModalButton";
@@ -9,12 +10,12 @@ const ReviewContainer = ({review}) => {
   const dispatch = useDispatch()
   const isReviewUpdated = review.created_at !== review.updated_at
   const sessionUser = useSelector((state) => state.session.user)
+  const userId = sessionUser?.id
 
   const handleDeleteBtn = async (e) => {
     e.preventDefault();
     return dispatch(destroyReview(review.id))
   }
-
 
   return (
     <span key={review.id} className="review-wrapper">
@@ -30,7 +31,7 @@ const ReviewContainer = ({review}) => {
 
           <div className="review-header-right">
             <p className="review-header-user-rating">⭐ {review.rating}/5</p>
-            {(review.user_id === sessionUser.id)  &&
+            {(review.user_id === userId)  &&
               <div className="review-btns-container">
 
                 <OpenModalButton

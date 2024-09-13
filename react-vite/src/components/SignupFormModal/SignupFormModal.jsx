@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
-import { thunkSignup } from "../../redux/session";
+import { thunkSignup, thunkLogin } from "../../redux/session";
 import "./SignupForm.css";
 
 function SignupFormModal() {
@@ -38,54 +38,73 @@ function SignupFormModal() {
     }
   };
 
+  const demoUser = (e) => {
+    e.preventDefault();
+    setErrors({})
+    dispatch(thunkLogin({ email: 'demo@aa.io', password: "password" }))
+        .then(closeModal)
+        .catch(async (res) => {
+            const data = await res.json();
+            if (data?.errors) setErrors(data.errors)
+        })
+  }
+
   return (
-    <>
+    <div className="signup-form-wrapper">
       <h1>Sign Up</h1>
       {errors.server && <p>{errors.server}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
+      <form className="signup-form" onSubmit={handleSubmit}>
+        <label className="signup-form-label">
           <input
             type="text"
             value={email}
+            placeholder="Email"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
         {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
+        <label className="signup-form-label">
           <input
             type="text"
             value={username}
+            placeholder="Username"
             onChange={(e) => setUsername(e.target.value)}
             required
           />
         </label>
         {errors.username && <p>{errors.username}</p>}
-        <label>
-          Password
+        <label className="signup-form-label">
           <input
             type="password"
             value={password}
+            placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </label>
         {errors.password && <p>{errors.password}</p>}
-        <label>
-          Confirm Password
+        <label className="signup-form-label">
           <input
             type="password"
             value={confirmPassword}
+            placeholder="Conform Password"
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        <button className="signup-form-submit" type="submit">Sign Up</button>
       </form>
-    </>
+
+      <div>
+
+        <p className="demo-user-txt">Not ready to sign up yet?
+          <button className="demo-user-btn" onClick={demoUser}>Try Demo</button>
+        </p>
+
+      </div>
+    </div>
   );
 }
 

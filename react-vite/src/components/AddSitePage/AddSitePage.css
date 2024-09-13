@@ -1,0 +1,58 @@
+.create-site-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgb(185, 218, 253);
+  border-radius: 2%;
+  padding: 5% 5%;
+  margin: 2% 15%;
+  background-color: rgba(208, 225, 252, 0.672);
+}
+
+.addsite-header {
+  margin: 0px;
+}
+
+.addsite-form-text {
+  margin-top: 25px;
+  margin-bottom: 45px;
+}
+
+.addsite-advisory {
+  font-size: 14px;
+}
+
+.addsite-input > input {
+  font-size: 16px;
+  font-weight: 300;
+  padding: 5px;
+  width: 100%;
+  height: 20px;
+}
+
+.addsite-input > h3 {
+  margin-bottom: 5px;
+  font-weight: 650;
+}
+
+.addsite-input > textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;;
+  font-size: 14px;
+  padding: 5px;
+  width: 100%;
+  height: 100px;
+}
+
+.addsite-submit-btns {
+  display: flex;
+  justify-content: center;
+}
+
+.addsite-form-submit-btn {
+  margin-top: 50px;
+  padding: 10px;
+  font-size: 14px;
+  width: 400px;
+  background-color: rgb(123, 141, 241);
+  border: solid 1px rgb(38, 89, 172);
+}
