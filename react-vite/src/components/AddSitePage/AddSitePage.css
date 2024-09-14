@@ -54,5 +54,10 @@
   font-size: 14px;
   width: 400px;
   background-color: rgb(123, 141, 241);
-  border: solid 1px rgb(38, 89, 172);
+  border: solid 1px rgb(123, 141, 241);
+}
+
+.addsite-form-submit-btn:hover {
+  cursor: pointer;
+  background-color: rgb(185, 194, 242);
 }

@@ -28,10 +28,11 @@
 .sc-circle-btn:hover {
   width: 55px;
   border-radius: 25px;
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 12px;
 }
 
 .sc-circle-btn:focus {
   outline: none;
 }
+

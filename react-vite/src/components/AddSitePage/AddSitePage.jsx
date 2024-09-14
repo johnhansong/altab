@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { createSite, updateWebsite } from '../../redux/websiteReducer'
+import { createSite, updateWebsite, clearSiteState } from '../../redux/websiteReducer'
 import { fetchOneSite } from '../../redux/websiteReducer'
 import OpenModalButton from '../OpenModalButton'
 import LoginFormModal from '../LoginFormModal'
@@ -13,21 +13,40 @@ function AddSite ({toggle}) {
   const sessionUser = useSelector((state) => state.session.user)
   const sessionSite = useSelector((state) => state.websites.oneSite)
   const { siteId } = useParams();
+  const siteExists = Object.values(sessionSite).length
 
-  useEffect(() => {
-    dispatch(fetchOneSite(siteId))
-  }, [dispatch, siteId])
-
-  const [name, setName] = useState( siteId ? sessionSite.name : "")
-  const [description, setDescription] = useState( siteId ? sessionSite.description : "")
-  const [link, setLink] = useState( siteId ? sessionSite.link : "")
-  const [image, setImage] = useState( siteId ? sessionSite.image : "")
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
+  const [link, setLink] = useState("")
+  const [image, setImage] = useState("")
   const [errors, setErrors] = useState({})
 
   const handleName = (e) => setName(e.target.value)
   const handleDescription = (e) => setDescription(e.target.value)
   const handleLink = (e) => setLink(e.target.value)
   const handleImage = (e) => setImage(e.target.value)
+
+  useEffect(() => {
+    if (toggle === "create") {
+      setName("")
+      setDescription("")
+      setLink("")
+      setImage("")
+    }
+    if (siteId && toggle === "update") {
+      dispatch(fetchOneSite(siteId))
+    }
+    return () => dispatch(clearSiteState())
+  }, [dispatch, siteId, toggle])
+
+  useEffect(() => {
+    if (siteExists && siteId) {
+      setName(sessionSite.name || "")
+      setDescription(sessionSite.description || "")
+      setLink(sessionSite.link || "")
+      setImage(sessionSite.image || "")
+    }
+  }, [sessionSite, siteExists])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -60,7 +79,7 @@ function AddSite ({toggle}) {
       try {
         let newSite;
         if (siteId) {
-          newSite = await dispatch(updateWebsite(payload))
+          newSite = await dispatch(updateWebsite(payload, siteId))
         } else {
           newSite = await dispatch(createSite(payload))
         }
@@ -76,7 +95,6 @@ function AddSite ({toggle}) {
       }
   }
 
-  const siteExists = Object.values(sessionSite).length
 
   if (toggle == 'update' && sessionSite.user_id !== sessionUser.id) {
     return (
@@ -113,7 +131,7 @@ function AddSite ({toggle}) {
             <input
               onChange={handleName}
               placeholder='Website Name'
-              defaultValue={name}
+              value={name}
             ></input>
             <p className="error">{errors.name}</p>
           </div>
@@ -123,7 +141,7 @@ function AddSite ({toggle}) {
             <textarea
               onChange={handleDescription}
               placeholder='Website Description'
-              defaultValue={description}
+              value={description}
             ></textarea>
             <p className="error">{errors.description}</p>
           </div>
@@ -133,7 +151,7 @@ function AddSite ({toggle}) {
             <input
               onChange={handleLink}
               placeholder='Website Link'
-              defaultValue={link}
+              value={link}
             ></input>
             <p className="error">{errors.link}</p>
           </div>
@@ -143,7 +161,7 @@ function AddSite ({toggle}) {
             <input
               onChange={handleImage}
               placeholder='Website Image Url'
-              defaultValue={image}
+              value={image}
             ></input>
             <p className="error">{errors.image}</p>
           </div>

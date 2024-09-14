@@ -42,6 +42,12 @@
   padding-bottom: 50px;
 }
 
+.landing-page-block-2 > h2 {
+  margin: 35px 0px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
 .lp-featured-sites {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -62,7 +68,8 @@
   flex-direction: column;
   width: 225px;
   height: 275px;
-  border: 2px solid rgb(220, 216, 216);
+  border: 2px solid rgba(240, 248, 255, 0.374);
+  background-color: rgba(240, 248, 255, 0.628);
   border-radius: 10%;
   padding: 15px 10px;
 }
@@ -74,9 +81,11 @@
 }
 
 .landing-page-site-con-img {
-  width: 150px;
-  height: 120px;
-  padding: 15px;
+  width: 145px;
+  height: 115px;
+  margin: 15px;
+  border-radius: 5%;
+  object-fit: cover;
 }
 
 .landing-page-site-con-details {

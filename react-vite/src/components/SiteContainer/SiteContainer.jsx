@@ -18,6 +18,7 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
   const [yellowBtnText] = useState(btnHandle.yellowBtnText ? btnHandle.yellowBtnText : "")
   const [greenBtnText] = useState(btnHandle.greenBtnText ? btnHandle.greenBtnText : "")
 
+  console.log(siteDetails.link)
 
   return (
     <div key={siteDetails.id} className={`${className}-site-container`}>
@@ -39,7 +40,7 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
 
       <div className={`${className}-site-con-info`}>
         <img className={`${className}-site-con-img`}
-            src={siteDetails.preview_img?.length ? siteDetails.link : "./template.png"}
+            src={siteDetails.preview_img?.length ? siteDetails.preview_img : "./template.png"}
         />
 
         <div className={`${className}-site-con-details`}>

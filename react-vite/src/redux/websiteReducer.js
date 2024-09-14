@@ -3,6 +3,7 @@ const GET_ALL_SITES = '/site/GET_SITES'
 const GET_ONE_SITE = '/site/GET_ONE_SITE'
 const ADD_SITE = '/site/ADD_SITE'
 const DELETE_SITE = '/site/DELETE_SITE'
+const CLEAR_STATE = '/site/CLEAR_STATE'
 
 
 //*-------ACTION CREATORS---------
@@ -31,6 +32,12 @@ const doomedWebsite = (websiteId) => {
   return {
     type: DELETE_SITE,
     websiteId
+  }
+}
+
+export const clearSiteState = () => {
+  return {
+    type: CLEAR_STATE
   }
 }
 
@@ -132,6 +139,13 @@ const websiteReducer = (state=initialState, action) => {
       }
       delete newState.allSites[action.websiteId]
       return newState
+    }
+
+    case CLEAR_STATE: {
+      return {
+        ...state,
+        oneSite: {}
+      }
     }
 
     default: return state;

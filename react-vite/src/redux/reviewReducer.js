@@ -3,6 +3,7 @@ const GET_SITE_REVIEWS = '/review/GET_SITE_REVIEWS'
 const GET_REVIEW = '/review/GET_REVIEW'
 const ADD_REVIEW = '/review/ADD_REVIEW'
 const DELETE_REVIEW = '/review/DELETE_REVIEW'
+const CLEAR_STATE = '/review/CLEAR_STATE'
 
 
 //*-------ACTION CREATORS---------
@@ -31,6 +32,12 @@ const doomedReview = (reviewId) => {
   return {
     type: DELETE_REVIEW,
     payload: reviewId
+  }
+}
+
+export const clearSiteReviews = () => {
+  return {
+    type: CLEAR_STATE
   }
 }
 
@@ -142,6 +149,12 @@ const reviewReducer = (state=initialState, action) => {
         ...state,
         siteReviews: newSiteReviews,
         oneReview: {}
+      }
+    }
+
+    case CLEAR_STATE: {
+      return {
+        ...initialState
       }
     }
 

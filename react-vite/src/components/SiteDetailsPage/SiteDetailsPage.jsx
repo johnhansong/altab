@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams, useNavigate } from "react-router-dom"
 import { fetchOneSite, destroyWebsite } from "../../redux/websiteReducer"
-import { fetchSiteReviews, fetchReview } from "../../redux/reviewReducer"
+import { fetchSiteReviews, fetchReview, clearSiteReviews } from "../../redux/reviewReducer"
 import OpenModalButton from "../OpenModalButton"
 import ReviewContainer from "./ReviewContainer"
 import AddReviewModal from "../AddReviewModal/AddReviewModal"
@@ -33,13 +33,12 @@ const SiteDetailsPage = () => {
   }
 
   useEffect(() => {
+    dispatch(clearSiteReviews())
     dispatch(fetchOneSite(siteId))
     dispatch(fetchSiteReviews(siteId))
   }, [dispatch, siteId])
 
   const userReview = siteReviewsArr.filter(review => review.user_id == userId)
-
-  console.log(userReview[0]?.id)
 
   useEffect(() => {
     if (userId && userReview[0]?.user_id == userId) {
