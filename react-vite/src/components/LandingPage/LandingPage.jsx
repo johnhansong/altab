@@ -48,6 +48,8 @@ function LandingPage() {
         <div className="lp-block-1-btns">
           <button
             className="lp-block1-btn"
+            type="button"
+            onClick={() => navigate("/sites")}
           >Explore Websites</button>
 
           {sessionUser ?

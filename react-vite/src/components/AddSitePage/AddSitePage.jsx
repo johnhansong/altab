@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createSite, updateWebsite, clearSiteState } from '../../redux/websiteReducer'
 import { fetchOneSite } from '../../redux/websiteReducer'
+import { isValidUrl } from '../../../bandaid'
 import OpenModalButton from '../OpenModalButton'
 import LoginFormModal from '../LoginFormModal'
 import './AddSitePage.css'
@@ -46,7 +47,7 @@ function AddSite ({toggle}) {
       setLink(sessionSite.link || "")
       setImage(sessionSite.image || "")
     }
-  }, [sessionSite, siteExists])
+  }, [sessionSite, siteExists, siteId])
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -62,7 +63,11 @@ function AddSite ({toggle}) {
       } else if (description.length < 30) {
         error.description = "Site description must be 30 characters or more"}
 
-      if (!link) { error.link = "Site link is required" }
+      if (!link) {
+        error.link = "Site link is required"
+      } else if (!isValidUrl(link)) {
+        error.link = "Please provide a valid URL"
+      }
 
       if (Object.keys(error).length > 0) {
         setErrors(error)

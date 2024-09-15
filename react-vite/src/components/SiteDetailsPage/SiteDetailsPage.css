@@ -14,7 +14,9 @@
 .site-details-img {
   display: flex;
   margin-top: 0px;
-  border: 1px solid;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 4px 8px rgba(19, 113, 185, 0.3);
+  border-radius: 5%;
   width: 500px;
   height: 350px;
   object-fit: cover;
@@ -50,10 +52,11 @@
 }
 
 .site-details-description {
-  border: 1px solid;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 4px 8px rgba(19, 113, 185, 0.3);
   border-radius: 5px;
   background-color: white;
-  padding: 6px;
+  padding: 10px;
   height: 140px;
 }
 
@@ -73,7 +76,7 @@
 }
 
 .sd-circle-btn {
-  width: 100px;
+  width: 75px;
   height: 25px;
   border-radius: 5%;
   border: none;
@@ -93,7 +96,7 @@
 #sd-green-btn {background-color: rgb(88, 212, 117);}
 
 .sd-circle-btn:hover {
-  width: 100px;
+  width: 110px;
   border-radius: 25px;
   color: rgb(0, 0, 0);
   font-size: 14px;

@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import LoginFormPage from '../components/LoginFormPage';
 import SignupFormPage from '../components/SignupFormPage';
 import LandingPage from '../components/LandingPage';
+import SiteListPage from '../components/SiteListPage'
 import SiteDetailsPage from '../components/SiteDetailsPage';
 import AddSite from '../components/AddSitePage';
 import Layout from './Layout';
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <LandingPage />,
+      },
+      {
+        path: "/sites",
+        element: <SiteListPage />,
       },
       {
         path: "login",
