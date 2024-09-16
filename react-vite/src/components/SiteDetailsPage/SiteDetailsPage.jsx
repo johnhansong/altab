@@ -124,6 +124,7 @@ const SiteDetailsPage = () => {
           <div>
             {userId && userReview.length == 0 ?
               <OpenModalButton
+                className="add-review-btn"
                 buttonText="Add Review"
                 modalComponent={<AddReviewModal websiteId={siteId} reviewId={null}/>}
               ></OpenModalButton>
