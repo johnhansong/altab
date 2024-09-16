@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { fetchAllSites } from '../../redux/websiteReducer'
 import SiteContainer from '../SiteContainer';
 import { limitString } from '../../../bandaid';
@@ -8,6 +9,7 @@ import './SiteListPage.css'
 
 const SiteListPage = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const websites = useSelector((state) => state.websites.allSites)
   const websitesArray = Object.values(websites)
 

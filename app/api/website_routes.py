@@ -66,8 +66,6 @@ def post_website():
 def update_site(website_id):
   site_to_update = Website.query.filter(Website.id == website_id).first()
 
-  print("TEST", site_to_update)
-
   if not site_to_update:
     return {'errors': {'message': 'Website not found'}}, 404
   if site_to_update.user_id != current_user.id:

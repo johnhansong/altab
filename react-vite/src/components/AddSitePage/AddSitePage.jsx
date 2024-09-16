@@ -66,7 +66,7 @@ function AddSite ({toggle}) {
       if (!link) {
         error.link = "Site link is required"
       } else if (!isValidUrl(link)) {
-        error.link = "Please provide a valid URL"
+        error.link = "Please provide a valid URL (with https:// prefix)"
       }
 
       if (Object.keys(error).length > 0) {

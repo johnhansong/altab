@@ -10,8 +10,10 @@ const AddReviewModal = ({websiteId, reviewId}) => {
   const currReview = useSelector((state) => state.reviews.oneReview)
   const { closeModal } = useModal();
 
+  console.log('Review ID', reviewId)
+
   useEffect(() => {
-    if(reviewId) {
+    if(reviewId != null) {
       dispatch(fetchReview(reviewId))
     }
   }, [dispatch, reviewId])
@@ -38,11 +40,11 @@ const AddReviewModal = ({websiteId, reviewId}) => {
       error.title = "Title must be at least 5 characters"}
 
     if (!review) {
-      error.reviews = "Please provide a review"
+      error.review = "Please provide a review"
     } else if (review.length < 30) {
-      error.reviews = "Review must be at least 30 characters"
+      error.review = "Review must be at least 30 characters"
     } else if (review.length > 2000) {
-      error.reviews = "Review must not exceed 2000 characters"}
+      error.review = "Review must not exceed 2000 characters"}
 
     if (Object.keys(error).length > 0) {
       setErrors(error);
@@ -115,7 +117,7 @@ const AddReviewModal = ({websiteId, reviewId}) => {
             checked={rating === 1}
           /> <label htmlFor="star1" title="1 stars"></label>
         </div>
-        <p>{errors.rating}</p>
+        <p className="error">{errors.rating}</p>
 
         <div className="add-review-title">
           <input
@@ -125,7 +127,7 @@ const AddReviewModal = ({websiteId, reviewId}) => {
             value={title}
           ></input>
         </div>
-        <p>{errors.title}</p>
+        <p className="error">{errors.title}</p>
 
         <div className="add-review-text">
           <textarea
@@ -135,7 +137,7 @@ const AddReviewModal = ({websiteId, reviewId}) => {
             value={review}
           ></textarea>
         </div>
-        <p>{errors.review}</p>
+        <p className="error">{errors.review}</p>
 
         <button className="add-review-submit-btn" type="submit">Submit</button>
       </form>

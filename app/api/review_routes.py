@@ -47,14 +47,14 @@ def update_review(review_id):
   form['csrf_token'].data = request.cookies['csrf_token']
 
   if form.validate_on_submit():
-    review_to_update.title=form.data["title"]
-    review_to_update.review=form.data["review"]
-    review_to_update.rating=form.data["rating"]
+    review_to_update.title=form.title.data
+    review_to_update.review=form.review.data
+    review_to_update.rating=form.rating.data
 
     db.session.commit()
-    return review_to_update.to_dict(), 201
+    return review_to_update.to_dict(), 200
 
-  return form.errors, 401
+  return {'errors': form.errors}, 400
 
 
 @review_routes.route('<int:review_id>', methods=['DELETE'])

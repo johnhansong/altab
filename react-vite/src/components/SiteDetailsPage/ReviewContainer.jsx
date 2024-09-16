@@ -23,29 +23,29 @@ const ReviewContainer = ({review}) => {
 
         <div className="review-header">
           <div className="review-header-user-info">
-            <h4>(UserName goes here)</h4>
-            <p>Reviewed on {review.created_at.slice(0, 16)}
-              {isReviewUpdated && (<div className="review-edited-msg">Edited {review.updated_at.slice(0, 16)}</div>)}
+            <h4 className="reviewer-info">{review.username}</h4>
+            <p className="review-timestamp">Reviewed on {review.created_at.slice(0, 16)}
+              {isReviewUpdated && (<span className="review-timestamp">; Edited {review.updated_at.slice(0, 16)}</span>)}
             </p>
           </div>
 
           <div className="review-header-right">
-            <p className="review-header-user-rating">⭐ {review.rating}/5</p>
             {(review.user_id === userId)  &&
               <div className="review-btns-container">
 
                 <OpenModalButton
-                  className="review-btn"
+                  className="review-btn-edit"
                   buttonText="Edit"
                   modalComponent={<AddReviewModal websiteId={review.website_id} reviewId={review.id}/>}
                 ></OpenModalButton>
 
                 <button
-                  className="review-btn"
+                  className="review-btn-delete"
                   onClick={handleDeleteBtn}
                 >Delete</button>
               </div>
             }
+            <p className="review-header-user-rating">⭐ {review.rating}/5</p>
           </div>
         </div>
 

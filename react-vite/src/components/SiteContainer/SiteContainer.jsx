@@ -18,8 +18,6 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
   const [yellowBtnText] = useState(btnHandle.yellowBtnText ? btnHandle.yellowBtnText : "")
   const [greenBtnText] = useState(btnHandle.greenBtnText ? btnHandle.greenBtnText : "")
 
-  console.log(siteDetails.link)
-
   return (
     <div key={siteDetails.id} className={`${className}-site-container`}>
         <div className="site-container-btns">

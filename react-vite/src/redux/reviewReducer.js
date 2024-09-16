@@ -1,7 +1,8 @@
 //*------ACTION TYPES---------
 const GET_SITE_REVIEWS = '/review/GET_SITE_REVIEWS'
 const GET_REVIEW = '/review/GET_REVIEW'
-const ADD_REVIEW = '/review/ADD_REVIEW'
+const CREATE_REVIEW = '/review/CREATE_REVIEW'
+const UPDATE_REVIEW = '/review/UPDATE_REVIEW'
 const DELETE_REVIEW = '/review/DELETE_REVIEW'
 const CLEAR_STATE = '/review/CLEAR_STATE'
 
@@ -21,9 +22,16 @@ const loadReview = (review) => {
   }
 }
 
-const addReview = (review) => {
+const postReview = (review) => {
   return {
-    type: ADD_REVIEW,
+    type: CREATE_REVIEW,
+    payload: review
+  }
+}
+
+const putReview = (review) => {
+  return {
+    type: UPDATE_REVIEW,
     payload: review
   }
 }
@@ -72,7 +80,7 @@ export const createReview = (siteId, review) => async (dispatch) => {
 
     if (res.ok) {
       const newReview = await res.json()
-      dispatch(addReview(newReview))
+      dispatch(postReview(newReview))
       return newReview
     } else {
       const errorData = await res.json()
@@ -95,7 +103,7 @@ export const updateReview = (reviewId, review) => async (dispatch) => {
 
     if (res.ok) {
       const updatedReview = await res.json()
-      dispatch(addReview(updatedReview))
+      dispatch(putReview(updatedReview))
       return updatedReview
     } else {
       const errorData = await res.json()
@@ -103,7 +111,7 @@ export const updateReview = (reviewId, review) => async (dispatch) => {
       throw new Error(errorData.message || "Error submitting review")
     }
   } catch(err) {
-    console.error("Error creating review", err)
+    console.error("Error posting updated review", err)
     throw err;
   }
 }
@@ -129,7 +137,7 @@ const reviewReducer = (state=initialState, action) => {
     case GET_REVIEW:
       return {...state, oneReview: {...action.payload}}
 
-    case ADD_REVIEW:
+    case CREATE_REVIEW: {
       return {
         ...state,
         siteReviews: {
@@ -138,13 +146,23 @@ const reviewReducer = (state=initialState, action) => {
         },
         oneReview: {...action.payload}
       }
+    }
+
+    case UPDATE_REVIEW: {
+      return {
+        ...state,
+        siteReviews: {
+          ...state.siteReviews,
+          [action.payload.id]: action.payload
+        },
+        oneReview: {...action.payload}
+      }
+    }
 
     case DELETE_REVIEW: {
       const { payload: reviewId } = action;
       const newSiteReviews = { ...state.siteReviews }
-
       delete newSiteReviews[reviewId]
-
       return {
         ...state,
         siteReviews: newSiteReviews,
