@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import OpenModalButton from '../OpenModalButton'
 import './SiteContainer.css'
 
 const SiteContainer = ({siteDetails, className, btnHandle}) => {
@@ -26,9 +27,13 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
                   onClick={() => btnHandle.redBtnHandle(siteDetails.id)}
           >{redBtnText}</button>
 
-          <button className="sc-circle-btn"
+          <OpenModalButton className="sc-circle-btn"
                   id="sc-yellow-btn"
-          >{yellowBtnText}</button>
+                  buttonText={yellowBtnText}
+                  modalComponent={
+                    <h3 className="in-dev-msg">Add to Collection in Development!</h3>
+                  }
+          ></OpenModalButton>
 
           <button className="sc-circle-btn"
                   id="sc-green-btn"
