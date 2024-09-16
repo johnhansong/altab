@@ -57,7 +57,6 @@ const AddReviewModal = ({websiteId, reviewId}) => {
       review
     }
 
-    console.log("REVIEW ID", reviewId)
 
     let reviewPayload
     try {

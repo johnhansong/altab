@@ -19,6 +19,8 @@ def get_user_reviews():
   return {'reviews': [review.to_dict() for review in user_reviews]}, 200
 
 
+
+
 @review_routes.route('/<int:review_id>')
 @login_required
 def get_review_by_id(review_id):
@@ -39,7 +41,6 @@ def update_review(review_id):
 
   if not review_to_update:
     return {'errors': {'message': 'Review not found'}}, 404
-
   if review_to_update.user_id != current_user.id:
     return {'errors': {'message': 'Unauthorized'}}, 401
 
@@ -55,6 +56,9 @@ def update_review(review_id):
     return review_to_update.to_dict(), 200
 
   return {'errors': form.errors}, 400
+
+
+
 
 
 @review_routes.route('<int:review_id>', methods=['DELETE'])

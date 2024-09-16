@@ -149,13 +149,20 @@ const reviewReducer = (state=initialState, action) => {
     }
 
     case UPDATE_REVIEW: {
-      return {
-        ...state,
-        siteReviews: {
-          ...state.siteReviews,
-          [action.payload.id]: action.payload
-        },
-        oneReview: {...action.payload}
+      const reviewId = action.payload.id;
+      const key = Object.entries(state.siteReviews).find(([key, review]) => review.id === reviewId)?.[0]
+
+      if (key) {
+        return {
+          ...state,
+          siteReviews: {
+            ...state.siteReviews,
+            [key]: action.payload,
+          },
+          oneReview: action.payload
+        }
+      } else {
+        return state;
       }
     }
 
