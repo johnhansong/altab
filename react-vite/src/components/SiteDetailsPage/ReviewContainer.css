@@ -1,0 +1,80 @@
+.review-container {
+  border: 1px solid rgba(0, 0, 0, 0.272);
+  border-radius: 5px;
+  background-color: white;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: rgb(241, 238, 238);
+  padding: 0px 15px;
+}
+
+.reviewer-info {
+  font-size: 18px;
+  margin-top: 12px;
+  margin-bottom: 0px;
+}
+
+.review-timestamp {
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 16px;
+}
+
+.review-body {
+  padding: 0px 15px;
+}
+
+.review-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.review-btns-container {
+  margin-top: 8px;
+  margin-bottom: 0px;
+}
+
+
+.review-btns-container > button {
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0px 2px 4px rgba(85, 113, 159, 0.773);
+  width: 65px;
+  height: 20px;
+}
+
+.review-btns-container > button:hover {
+  cursor: pointer;
+  box-shadow: 0px 3px 6px rgb(123, 174, 255);
+}
+
+.review-btn-edit {
+  margin-right: 4px;
+  background-color: rgb(240, 202, 106);
+}
+
+.review-btn-delete {
+  margin-left: 4px;
+  background-color: rgb(247, 149, 151);
+}
+
+.review-header-user-rating {
+  margin-bottom: 12px;
+}
+
+
+.review-body > h4 {
+  font-size: 16px;
+  margin-top: 12px;
+  margin-bottom: 6px
+}
+
+.review-body > p {
+  font-size: 14px;
+  margin-top: 0px;
+}
