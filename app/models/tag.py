@@ -12,7 +12,7 @@ class Tag(db.Model):
   updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
   #relationships
-  
+
 
   def to_dict(self):
     return {
