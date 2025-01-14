@@ -1,1 +1,8 @@
-Generic single-database configuration.
+// Database Migration and Seeder Commands;
+
+// pipenv run flask db migrate (!if applicable) -m "create tables"
+// pipenv run flask db upgrade
+// pipenv run flask seed all
+
+// Running frontend: npm run dev
+// running backend with flask: flask run
