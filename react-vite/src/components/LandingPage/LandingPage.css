@@ -3,10 +3,11 @@
   flex-direction: column;
   align-items: center;
   margin: 140px 0px 170px 0px;
+  padding-bottom: 20px;
 }
 
 .landing-page-block-1 > h1 {
-  font-size: 28px;
+  font-size: 36px;
 }
 
 .lp-block-1-btns {
@@ -20,10 +21,11 @@
   font-size: 16px;
   font-weight: lighter;
   margin: 0px 5px;
-  padding: 4px 6px;
+  padding: 6px 8px;
   border: 1px solid rgb(115,159,240);
   border-radius: 10px;
   list-style: none;
+  transition: background 0.2s ease-in-out;
 }
 
 .lp-block1-btn:hover {
@@ -37,15 +39,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgb(148, 181, 246);
+  background: linear-gradient(rgba(148, 181, 246, 0) 1%, rgb(148, 181, 246));
+  /* background-color: rgb(148, 181, 246); */
   padding-top: 10px;
   padding-bottom: 50px;
 }
 
 .landing-page-block-2 > h2 {
   margin: 35px 0px;
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 26px;
+  font-weight: 400;
+  color: rgb(9, 22, 47);
 }
 
 .lp-featured-sites {
@@ -72,6 +76,12 @@
   background-color: rgba(240, 248, 255, 0.628);
   border-radius: 10%;
   padding: 15px 10px;
+  transition: 0.3s ease;
+}
+
+.landing-page-site-container:hover {
+  border-color:#008bf8;
+  box-shadow: 0 4px 18px 0 rgba(0,0,0,0.25);
 }
 
 .landing-page-site-con-info {

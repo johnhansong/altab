@@ -45,12 +45,14 @@ function LandingPage() {
     <span className="landing-page-wrapper">
       <section className="landing-page-block-1">
         <h1>A Bookmarks Bar for Everyone.</h1>
+
         <div className="lp-block-1-btns">
+
           <button
             className="lp-block1-btn"
             type="button"
             onClick={() => navigate("/sites")}
-          >Explore Websites</button>
+          > Explore Websites</button>
 
           {sessionUser ?
             <button
@@ -66,10 +68,11 @@ function LandingPage() {
             ></OpenModalButton>
           }
         </div>
+
       </section>
 
       <section className="landing-page-block-2">
-          <h2>Featured Sites</h2>
+          <h2 className="lp-block-2-title">Featured Websites</h2>
           <div className="lp-featured-sites">{websites.length < 1 ?
             <span className="loading"> Loading... </span>
                 :
