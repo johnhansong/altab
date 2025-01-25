@@ -2,6 +2,9 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import Website, Review, db
 from app.forms import WebsiteForm, ReviewForm
+from app.utils.awsS3 import (
+  get_unique_filename, upload_file_to_S3
+)
 
 website_routes = Blueprint('sites', __name__)
 
@@ -43,13 +46,24 @@ def post_website():
   form = WebsiteForm()
   form['csrf_token'].data = request.cookies['csrf_token']
 
+  img = form.data["preview_img"]
+  img.filename = get_unique_filename(img.filename)
+  upload = upload_file_to_S3(img)
+  print(upload)
+
+  if "url" not in upload:
+    # dict does not have url key and an err occurred during upload
+    return {"error": "Error uploading image: no url in upload"}
+
+  preview_img = upload["url"]
+
   if form.validate_on_submit():
     new_site = Website(
       user_id = current_user.id,
       name=form.name.data,
       link=form.link.data,
       description=form.description.data,
-      preview_img=form.preview_img.data
+      preview_img=preview_img
     )
 
     db.session.add(new_site)
