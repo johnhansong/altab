@@ -9,9 +9,13 @@ ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 s3 = boto3.client(
   's3',
+  region_name='us-east-2'
   aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
   aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
 )
+
+def allowed_file(filename):
+  return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def get_unique_filename(filename):
   ext = filename.rsplit('.', 1)[1].lower()
@@ -21,6 +25,7 @@ def get_unique_filename(filename):
 def upload_file_to_S3(file, acl="public-read"):
   print("Bucket Name", BUCKET_NAME)
   try:
+    file.stream.seek(0)
     s3.upload_fileobj(
       file,
       BUCKET_NAME,
@@ -30,6 +35,9 @@ def upload_file_to_S3(file, acl="public-read"):
         "ContentType": file.content_type
       }
     )
+  except boto3.exceptions.S3UploadFailedError as e:
+    print("Upload failed:", e)
+    return {"errors": str(e)}
   except Exception as e:
     print("AWS error message:", str(e))
     return {"errors": str(e)}
