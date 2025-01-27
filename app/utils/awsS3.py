@@ -1,4 +1,5 @@
 import boto3
+import logging
 import botocore
 import os
 import uuid
@@ -7,9 +8,14 @@ BUCKET_NAME = os.environ.get("S3_BUCKET")
 S3_LOCATION = f"https://{BUCKET_NAME}.s3.amazonaws.com/"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
+boto3.set_stream_logger('boto3', level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger('botocore')
+
+
 s3 = boto3.client(
   's3',
-  region_name='us-east-2'
+  region_name='us-east-2',
   aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
   aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
 )
@@ -30,7 +36,7 @@ def upload_file_to_S3(file, acl="public-read"):
       file,
       BUCKET_NAME,
       file.filename,
-      extra_args={
+      ExtraArgs={
         "ACL": acl,
         "ContentType": file.content_type
       }
