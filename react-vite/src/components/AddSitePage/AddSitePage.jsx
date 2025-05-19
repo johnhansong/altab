@@ -25,14 +25,13 @@ function AddSite ({toggle}) {
   const handleName = (e) => setName(e.target.value)
   const handleDescription = (e) => setDescription(e.target.value)
   const handleLink = (e) => setLink(e.target.value)
-  const handleImage = (e) => setImage(e.target.value)
+  const handleImage = (e) => setImage(e.target.files[0])
 
   useEffect(() => {
     if (toggle === "create") {
       setName("")
       setDescription("")
       setLink("")
-      setImage("")
     }
     if (siteId && toggle === "update") {
       dispatch(fetchOneSite(siteId))
@@ -74,19 +73,20 @@ function AddSite ({toggle}) {
         return;
       }
 
-      const payload = {
-        name,
-        link,
-        description,
-        "preview_img": image
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("link", link);
+      formData.append("description", description);
+      if (image) {
+        formData.append("preview_img", img);
       }
 
       try {
         let newSite;
         if (siteId) {
-          newSite = await dispatch(updateWebsite(payload, siteId))
+          newSite = await dispatch(updateWebsite(formData, siteId))
         } else {
-          newSite = await dispatch(createSite(payload))
+          newSite = await dispatch(createSite(formData))
         }
 
         if (newSite) {
@@ -130,7 +130,10 @@ function AddSite ({toggle}) {
             </ol>
           </div>
 
-        <form className="addsite-form" onSubmit={handleSubmit}>
+        <form className="addsite-form"
+              onSubmit={handleSubmit}
+              encType='multipart/form-data'
+        >
           <div className="addsite-input">
             <h3>Website Title*</h3>
             <input
@@ -164,9 +167,9 @@ function AddSite ({toggle}) {
           <div className="addsite-input">
           <h3>Website Image</h3>
             <input
+              type="file"
+              accept="image/*"
               onChange={handleImage}
-              placeholder='Website Image Url'
-              value={image}
             ></input>
             <p className="error">{errors.image}</p>
           </div>

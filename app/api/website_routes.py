@@ -46,18 +46,22 @@ def post_website():
   form = WebsiteForm()
   form['csrf_token'].data = request.cookies['csrf_token']
 
-  img = form.data["preview_img"]
-  img.filename = get_unique_filename(img.filename)
-  upload = upload_file_to_S3(img)
-  print(upload)
-
-  if "url" not in upload:
-    # dict does not have url key and an err occurred during upload
-    return {"error": "Error uploading image: no url in upload"}
-
-  preview_img = upload["url"]
-
   if form.validate_on_submit():
+    preview_img = None     #default to none in case no img submitted
+
+    img = form.preview_img.data
+    if img:
+      try:
+        img.filename = get_unique_filename(img.filename)
+        upload = upload_file_to_S3(img)
+
+        if "url" not in upload:
+          return {"error": "Error uploading in img: no URL in upload"}, 401
+
+        preview_img = upload["url"]
+      except Exception as e:
+        return {"error": f"Img upload failed: {str(e)}"}, 500
+
     new_site = Website(
       user_id = current_user.id,
       name=form.name.data,
@@ -88,17 +92,34 @@ def update_site(website_id):
   form = WebsiteForm()
   form['csrf_token'].data = request.cookies['csrf_token']
 
+
   if form.validate_on_submit():
     site_to_update.user_id = current_user.id
     site_to_update.name=form.name.data
     site_to_update.link=form.link.data
     site_to_update.description=form.description.data
-    site_to_update.preview_img=form.preview_img.data
+
+    img=form.preview_img.data
+
+    if img:
+      try:
+        img.filename = get_unique_filename(img)
+        upload = upload_file_to_S3(img)
+
+        if "url" not in upload:
+          return {"error": "Error uploading image: no URL in upload"}, 400
+
+        site_to_update.preview_img = upload["url"]
+
+      except Exception as e:
+        return {"error": f"Image upload failed: {str(e)}"}, 500
 
     db.session.commit()
-    return site_to_update.to_dict(), 201
+    return site_to_update.to_dict(), 200
 
   return {'errors': form.errors}, 400
+
+
 
 @website_routes.route('/<int:website_id>', methods=['DELETE'])
 @login_required
@@ -114,8 +135,6 @@ def delete_website(website_id):
   db.session.commit()
 
   return {'message': 'Website deleted successfully'}
-
-
 
 
 
