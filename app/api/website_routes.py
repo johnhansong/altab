@@ -29,7 +29,7 @@ def get_website_details(website_id):
 # @website_routes.route('/')
 # @login_required
 # def get_websites_by_user():
-  """"""
+
 #   user_id = current_user.id
 
 #   user_sites = Website.query.filter_by(user_id=user_id).all()
@@ -38,16 +38,25 @@ def get_website_details(website_id):
 
 #   return {'websites': [site.to_dict() for site in user_sites]}, 200
 
+@website_routes.route('/<int:website_id>')
+def get_tags_by_website(website_id):
+  website = Website.query.get(website_id)
+  if not website:
+    return {'errors': {'message': 'No websites available'}}, 404
+
+  tags = website.tags
+  return {'tags': tags.toDict()}, 200
+
 
 @website_routes.route('/', methods=['POST'])
 @login_required
 def post_website():
-  """Create New Website """
+  """Create New Website"""
   form = WebsiteForm()
   form['csrf_token'].data = request.cookies['csrf_token']
 
   if form.validate_on_submit():
-    preview_img = None     #default to none in case no img submitted
+    preview_img = None    #default to none in case no img submitted
 
     img = form.preview_img.data
     if img:
@@ -59,6 +68,7 @@ def post_website():
           return {"error": "Error uploading in img: no URL in upload"}, 401
 
         preview_img = upload["url"]
+
       except Exception as e:
         return {"error": f"Img upload failed: {str(e)}"}, 500
 
@@ -78,7 +88,6 @@ def post_website():
   return {'errors': form.errors}, 400
 
 
-
 @website_routes.route('/<int:website_id>', methods=['PUT'])
 @login_required
 def update_site(website_id):
@@ -91,7 +100,6 @@ def update_site(website_id):
 
   form = WebsiteForm()
   form['csrf_token'].data = request.cookies['csrf_token']
-
 
   if form.validate_on_submit():
     site_to_update.user_id = current_user.id
@@ -135,7 +143,6 @@ def delete_website(website_id):
   db.session.commit()
 
   return {'message': 'Website deleted successfully'}
-
 
 
 #review routes

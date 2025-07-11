@@ -14,7 +14,9 @@ function LandingPage() {
   const navigate = useNavigate();
   const websites = useSelector((state) => state.websites.allSites)
   const sessionUser = useSelector((state) => state.session.user)
-  const featuredSites = websites.length > 8 ? randomizeArray(Object.values(websites), websites.length) : randomizeArray(Object.values(websites), 8)
+  const featuredSites = websites.length > 8 ?
+                    randomizeArray(Object.values(websites), websites.length)
+                    : randomizeArray(Object.values(websites), 8)
 
   const handleRedBtn = (siteId) => {
     navigate(`/sites/${siteId}`)
@@ -25,7 +27,7 @@ function LandingPage() {
   }
 
   const handleGreenBtn = (link) => {
-    window.location.href = `${link}`
+    window.open(link, '_blank');
   }
 
   const buttonHandle = {
@@ -34,7 +36,7 @@ function LandingPage() {
     "greenBtnText": "Visit",
     "redBtnHandle": handleRedBtn,
     "yellowBtnHandle": handleYellowBtn,
-    "greenBtnHandle": handleGreenBtn
+    "greenBtnHandle": handleGreenBtn,
   }
 
   useEffect(() => {

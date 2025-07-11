@@ -78,7 +78,7 @@ function AddSite ({toggle}) {
       formData.append("link", link);
       formData.append("description", description);
       if (image) {
-        formData.append("preview_img", img);
+        formData.append("preview_img", image);
       }
 
       try {

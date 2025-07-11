@@ -150,7 +150,7 @@ const reviewReducer = (state=initialState, action) => {
 
     case UPDATE_REVIEW: {
       const reviewId = action.payload.id;
-      const key = Object.entries(state.siteReviews).find(([key, review]) => review.id === reviewId)?.[0]
+      const key = Object.entries(state.siteReviews).find(([review]) => review.id === reviewId)?.[0]
 
       if (key) {
         return {

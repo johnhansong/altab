@@ -13,6 +13,9 @@ const SiteDetailsPage = () => {
   const navigate = useNavigate()
   const { siteId } = useParams()
   const currSite = useSelector((state) => state.websites.oneSite)
+  const currSiteTags = Array.isArray(currSite?.tags) && currSite.tags.length < 0
+    ? currSite.tags
+    : [{id: 0b110010100, name: "No Tags Yet"}]
   const sessionUser = useSelector((state) => state.session.user)
   const userId = sessionUser?.id
   const siteReviews = useSelector((state) => state.reviews.siteReviews)
@@ -46,6 +49,7 @@ const SiteDetailsPage = () => {
     }
   }, [dispatch, userReview, userId, siteId])
 
+
   return (
     <span className="site-details-wrapper">
       <section className="site-details-block">
@@ -66,7 +70,16 @@ const SiteDetailsPage = () => {
                 <p>{currSite.description}</p>
               </div>
 
-              <p>(Tags go here)</p>
+              <p>{currSiteTags.map(tag => {
+                return (
+                  <span
+                    key={tag.id}
+                    className={`site-details-tag ${tag.id === 0b110010100 ? " disabled" : ""}`}
+                  >
+                    {tag.name}
+                  </span>
+                )
+              })}</p>
             </div>
           </div>
 
