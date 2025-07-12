@@ -75,13 +75,13 @@ def seed_websites():
     name='Trello', user_id=2, link='https://trello.com',
     description='Visual project management with boards and cards.',
     preview_img='')
-  asana = Website(
-    name='Asana', user_id=3, link='https://asana.com/',
-    description='Task tracking and team collaboration',
-    preview_img='')
   todoist = Website(
-    name='Todoist', user_id=4, link='https://www.todoist.com/',
+    name='Todoist', user_id=3, link='https://www.todoist.com/',
     description='Powerful to-do list with natural language input.',
+    preview_img='')
+  archive = Website(
+    name='Archive', user_id=4, link='https://www.archive.org/',
+    description='Nonprofit digital library offering free books, movies, software, and more.',
     preview_img='')
 
   # PLACEHOLDER = Website(
@@ -108,8 +108,8 @@ def seed_websites():
   db.session.add(alternative_to)
   db.session.add(notion)
   db.session.add(trello)
-  db.session.add(asana)
   db.session.add(todoist)
+  db.session.add(archive)
   # db.session.add()
   db.session.commit()
 
