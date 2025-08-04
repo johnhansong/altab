@@ -1,0 +1,41 @@
+.tags-block {
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(19, 113, 185, 0.5);
+  margin: 4% 12%;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 40px;
+}
+
+.tags-inner-block {
+  width: 100%;
+}
+
+.tags-organized {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 2rem;
+  width: 100%;
+}
+
+.tag-letter-h2 {
+  margin-bottom: 0px;
+}
+
+.tag-groups-by-letter {
+  margin-top: 10px;
+  padding-left: 16px;
+}
+
+.tag {
+  text-decoration: underline;
+  color: rgb(123, 141, 241);
+}
+
+.tag:hover {
+  cursor: pointer;
+  color: rgb(52, 82, 252);
+}

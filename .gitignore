@@ -25,3 +25,4 @@ dist-ssr
 *.sw?
 package.json
 package-lock.json
+__pycache__/

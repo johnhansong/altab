@@ -1,4 +1,5 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
+from .association_tables import website_tags
 
 class Website(db.Model):
   __tablename__ = 'websites'
@@ -15,11 +16,14 @@ class Website(db.Model):
   created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
   updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
-
-
   #relationships
   user = db.relationship('User', back_populates='websites')
   reviews = db.relationship('Review', back_populates='website')
+  tags = db.relationship(
+    'Tag',
+    secondary=website_tags,
+    back_populates='websites'
+  )
 
   def to_dict(self):
     return {
@@ -28,6 +32,7 @@ class Website(db.Model):
       'user_id': self.user_id,
       'link': self.link,
       'description': self.description,
+      'tags': [{'id': tag.id, 'name': tag.name} for tag in self.tags],
       'preview_img': self.preview_img,
       'created_at': self.created_at,
       'updated_at': self.updated_at

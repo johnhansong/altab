@@ -1,4 +1,4 @@
-from app.models import db, Website, environment, SCHEMA
+from app.models import db, Website, Tag, environment, SCHEMA
 from sqlalchemy.sql import text
 
 def seed_websites():
@@ -67,7 +67,27 @@ def seed_websites():
     description="Discover alternative software and/or services for the most popular utilities and tools online including word, PDF managers, photo editors, and more.",
     preview_img='')
 
+  notion = Website(
+    name='Notion', user_id=1, link='https://www.notion.com',
+    description='All-in-one workspace for notes, tasks, databases.',
+    preview_img='')
+  trello = Website(
+    name='Trello', user_id=2, link='https://trello.com',
+    description='Visual project management with boards and cards.',
+    preview_img='')
+  todoist = Website(
+    name='Todoist', user_id=3, link='https://www.todoist.com/',
+    description='Powerful to-do list with natural language input.',
+    preview_img='')
+  archive = Website(
+    name='Archive', user_id=4, link='https://www.archive.org/',
+    description='Nonprofit digital library offering free books, movies, software, and more.',
+    preview_img='')
 
+  # PLACEHOLDER = Website(
+  #   name='', user_id=placeholder, link='',
+  #   description='',
+  #   preview_img='', tags=[])
 
 
   db.session.add(muscle_wiki)
@@ -86,8 +106,12 @@ def seed_websites():
   db.session.add(retro_games)
   db.session.add(plan_your_room)
   db.session.add(alternative_to)
+  db.session.add(notion)
+  db.session.add(trello)
+  db.session.add(todoist)
+  db.session.add(archive)
+  # db.session.add()
   db.session.commit()
-
 
 def undo_websites():
   if environment == "production":

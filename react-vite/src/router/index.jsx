@@ -4,6 +4,7 @@ import SignupFormPage from '../components/SignupFormPage';
 import LandingPage from '../components/LandingPage';
 import SiteListPage from '../components/SiteListPage'
 import SiteDetailsPage from '../components/SiteDetailsPage';
+import TagsPage from '../components/TagsPage';
 import AddSite from '../components/AddSitePage';
 import Layout from './Layout';
 
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: "/sites/:siteId/edit",
         element: <AddSite toggle={'update'}/>
+      },
+      {
+        path: "/tags",
+        element: <TagsPage />
       }
     ],
   },

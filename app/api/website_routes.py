@@ -2,6 +2,9 @@ from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from app.models import Website, Review, db
 from app.forms import WebsiteForm, ReviewForm
+from app.utils.awsS3 import (
+  get_unique_filename, upload_file_to_S3
+)
 
 website_routes = Blueprint('sites', __name__)
 
@@ -26,7 +29,7 @@ def get_website_details(website_id):
 # @website_routes.route('/')
 # @login_required
 # def get_websites_by_user():
-  """"""
+
 #   user_id = current_user.id
 
 #   user_sites = Website.query.filter_by(user_id=user_id).all()
@@ -35,21 +38,46 @@ def get_website_details(website_id):
 
 #   return {'websites': [site.to_dict() for site in user_sites]}, 200
 
+@website_routes.route('/<int:website_id>')
+def get_tags_by_website(website_id):
+  website = Website.query.get(website_id)
+  if not website:
+    return {'errors': {'message': 'No websites available'}}, 404
+
+  tags = website.tags
+  return {'tags': tags.toDict()}, 200
+
 
 @website_routes.route('/', methods=['POST'])
 @login_required
 def post_website():
-  """Create New Website """
+  """Create New Website"""
   form = WebsiteForm()
   form['csrf_token'].data = request.cookies['csrf_token']
 
   if form.validate_on_submit():
+    preview_img = None    #default to none in case no img submitted
+
+    img = form.preview_img.data
+    if img:
+      try:
+        img.filename = get_unique_filename(img.filename)
+        upload = upload_file_to_S3(img)
+
+        if "url" not in upload:
+          return {"error": "Error uploading in img: no URL in upload"}, 401
+
+        preview_img = upload["url"]
+
+      except Exception as e:
+        return {"error": f"Img upload failed: {str(e)}"}, 500
+
     new_site = Website(
       user_id = current_user.id,
       name=form.name.data,
       link=form.link.data,
       description=form.description.data,
-      preview_img=form.preview_img.data
+      preview_img=preview_img
     )
 
     db.session.add(new_site)
@@ -58,7 +86,6 @@ def post_website():
     return new_site.to_dict(), 201
 
   return {'errors': form.errors}, 400
-
 
 
 @website_routes.route('/<int:website_id>', methods=['PUT'])
@@ -79,12 +106,28 @@ def update_site(website_id):
     site_to_update.name=form.name.data
     site_to_update.link=form.link.data
     site_to_update.description=form.description.data
-    site_to_update.preview_img=form.preview_img.data
+
+    img=form.preview_img.data
+
+    if img:
+      try:
+        img.filename = get_unique_filename(img)
+        upload = upload_file_to_S3(img)
+
+        if "url" not in upload:
+          return {"error": "Error uploading image: no URL in upload"}, 400
+
+        site_to_update.preview_img = upload["url"]
+
+      except Exception as e:
+        return {"error": f"Image upload failed: {str(e)}"}, 500
 
     db.session.commit()
-    return site_to_update.to_dict(), 201
+    return site_to_update.to_dict(), 200
 
   return {'errors': form.errors}, 400
+
+
 
 @website_routes.route('/<int:website_id>', methods=['DELETE'])
 @login_required
@@ -100,9 +143,6 @@ def delete_website(website_id):
   db.session.commit()
 
   return {'message': 'Website deleted successfully'}
-
-
-
 
 
 #review routes
