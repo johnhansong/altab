@@ -19,7 +19,14 @@ function Navigation() {
           </NavLink>
         </div>
 
-        <div>
+
+        <div className="header-right">
+          <NavLink className='header-link' to="/tags">
+            Tags
+          </NavLink>
+          <NavLink className='header-link' to="/sites">
+            Websites
+          </NavLink>
           <ProfileButton />
         </div>
     </section>

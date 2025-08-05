@@ -38,12 +38,30 @@
   text-decoration: none;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-link {
+  margin-right: 16px;
+  font-size: 16px;
+  color: rgb(240, 237, 237);
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.header-link:hover {
+  cursor: pointer;
+  color: rgb(178, 189, 251);
+}
 
 .profile-button {
   background-color: transparent;
   border: none;
   font-size: 30px;
   margin-right: 20px;
+  transition: 0.2s ease;
 }
 
 .profile-button:hover {

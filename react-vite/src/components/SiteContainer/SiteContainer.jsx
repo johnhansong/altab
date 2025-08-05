@@ -35,10 +35,11 @@ const SiteContainer = ({siteDetails, className, btnHandle}) => {
                   }
           ></OpenModalButton>
 
-          <button className="sc-circle-btn"
-                  id="sc-green-btn"
-                  onClick={() => btnHandle.greenBtnHandle(siteDetails.link)}
-          >{greenBtnText}</button>
+          <button className="sc-circle-btn" id="sc-green-btn">
+            <a className="green-btn-link" href={siteDetails.link} target="_blank" rel="noopener noreferrer">
+              {greenBtnText}
+            </a>
+          </button>
         </div>
 
       <div className={`${className}-site-con-info`}>

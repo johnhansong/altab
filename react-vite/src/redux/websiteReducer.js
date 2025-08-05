@@ -64,38 +64,42 @@ export const fetchOneSite = (siteId) => async (dispatch) => {
   }
 }
 
-export const createSite = (website) => async (dispatch) => {
+export const createSite = (formData) => async (dispatch) => {
   try {
     const res = await fetch(`/api/sites/`, {
         method: "POST",
-        body: JSON.stringify(website),
-        headers: { "Content-Type": "application/json" }
+        body: formData
     });
 
     if (res.ok) {
       const newSite = await res.json();
       dispatch(addSite(newSite))
       return newSite;
-    } else {
-      const err = await res.json();
-      throw err
     }
   } catch(err) {
     console.error("Error creating website", err)
+    throw err
   }
 }
 
-export const updateWebsite = (website, websiteId) => async (dispatch) => {
-  const res = await fetch(`/api/sites/${websiteId}`, {
-    method: "PUT",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(website)
-  });
+export const updateWebsite = (formData, websiteId) => async (dispatch) => {
+  try {
+    const res = await fetch(`/api/sites/${websiteId}`, {
+      method: "PUT",
+      body: formData
+    });
 
-  if (res.ok) {
-    const updatedSite = await res.json()
-    dispatch(addSite(updatedSite));
-    return updatedSite
+    if (res.ok) {
+      const updatedSite = await res.json()
+      dispatch(addSite(updatedSite));
+      return updatedSite
+    } else {
+      const err = await res.json();
+      throw err;
+    }
+  } catch (err) {
+    console.error("Error editing website", err)
+    throw err
   }
 }
 
