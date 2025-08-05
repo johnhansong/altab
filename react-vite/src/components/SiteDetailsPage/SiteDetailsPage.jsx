@@ -5,6 +5,7 @@ import { fetchOneSite, destroyWebsite } from "../../redux/websiteReducer"
 import { fetchSiteReviews, fetchReview, clearSiteReviews } from "../../redux/reviewReducer"
 import OpenModalButton from "../OpenModalButton"
 import ReviewContainer from "./ReviewContainer"
+import ConfirmationModal from "../ConfirmationModal"
 import AddReviewModal from "../AddReviewModal/AddReviewModal"
 import "./SiteDetailsPage.css"
 
@@ -60,8 +61,7 @@ const SiteDetailsPage = () => {
           <div className="site-details-info">
             <h2>{currSite.name}</h2>
             <p>
-              {avgRating ? `⭐ ${avgRating}/5` : "⭐ " }
-              ({siteReviewsArr.length} {siteReviewsArr.length == 1 ? "Review" : "Reviews"})
+            {avgRating ? `★  ${avgRating}` : "★ " } • {siteReviewsArr.length} {siteReviewsArr.length == 1 ? "Review" : "Reviews"}
             </p>
 
             <div className="site-details-info-sections">
@@ -89,7 +89,7 @@ const SiteDetailsPage = () => {
 
                 <button className="sd-circle-btn"
                         id="sd-green-btn"
-                        onClick={() => {window.location.href = `${currSite.link}`}}
+                        onClick={() => window.open(currSite.link, '_blank', 'noopener')}
                 >Visit</button>
 
                 <button className="sd-circle-btn"
@@ -97,10 +97,17 @@ const SiteDetailsPage = () => {
                         onClick={handleUpdateBtn}
                 >Edit</button>
 
-                <button className="sd-circle-btn"
+                <OpenModalButton className="sd-circle-btn"
                         id="sd-red-btn"
-                        onClick={handleDeleteBtn}
-                >Delete</button>
+                        buttonText="Delete"
+                        modalComponent={
+                          <ConfirmationModal
+                            text="Are you sure"
+                            buttonText="Delete"
+                            buttonAction={handleDeleteBtn}
+                          />
+                        }
+                ></OpenModalButton>
 
               </div>
                 :
@@ -123,12 +130,10 @@ const SiteDetailsPage = () => {
       <section className="site-reviews-block">
         <div className="site-reviews-header">
           <div className="site-review-header-rating">
-            <h2>Reviews</h2>
             {siteReviewsArr.length > 0 ?
-              <p>
-                ⭐ {avgRating}/5
-                ({siteReviewsArr.length} {siteReviewsArr.length == 1 ? "Review" : "Reviews"})
-              </p>
+              <h2>
+                ★ {avgRating} · {siteReviewsArr.length} {siteReviewsArr.length == 1 ? "Review" : "Reviews"}
+              </h2>
               :
               <p>No reviews yet. Add your review!</p>
             }

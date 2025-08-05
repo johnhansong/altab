@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
+from app.utils.awsS3 import allowed_file
 from app.models import Website, Review, db
 from app.forms import WebsiteForm, ReviewForm
 from app.utils.awsS3 import (
@@ -53,13 +54,20 @@ def get_tags_by_website(website_id):
 def post_website():
   """Create New Website"""
   form = WebsiteForm()
-  form['csrf_token'].data = request.cookies['csrf_token']
+  csrf_token = request.cookies.get('csrf_token')
+  if not csrf_token:
+    return {"errors": {"message": "Missing CSRF token"}}, 400
+
+  form['csrf_token'].data = csrf_token
+
 
   if form.validate_on_submit():
     preview_img = None    #default to none in case no img submitted
-
     img = form.preview_img.data
+
     if img:
+      if not allowed_file(img.filename):
+        return {"errors": {"preview_img": "File type not allowed"}}, 400
       try:
         img.filename = get_unique_filename(img.filename)
         upload = upload_file_to_S3(img)

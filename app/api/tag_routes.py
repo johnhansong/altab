@@ -109,6 +109,9 @@ def delete_tag(tag_id):
   if not doomed_tag:
     return {'errors': {'message': 'Tag not found or not authorized'}}, 404
 
+  if len(Tag.websites) > 0:
+    return {'errors': {'message': 'Cannot delete tag that is in use'}}, 403
+
   db.session.delete(doomed_tag)
   db.session.commit()
 

@@ -8,7 +8,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  background-color: rgb(241, 238, 238);
+  background-color: rgb(255, 255, 255);
   padding: 0px 15px;
 }
 
@@ -46,6 +46,7 @@
   box-shadow: 0px 2px 4px rgba(85, 113, 159, 0.773);
   width: 65px;
   height: 20px;
+  transition: 0.2s ease;
 }
 
 .review-btns-container > button:hover {
@@ -70,7 +71,7 @@
 
 .review-body > h4 {
   font-size: 16px;
-  margin-top: 12px;
+  margin-top: 0px;
   margin-bottom: 6px
 }
 

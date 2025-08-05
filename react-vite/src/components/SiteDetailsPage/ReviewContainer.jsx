@@ -24,7 +24,11 @@ const ReviewContainer = ({review}) => {
         <div className="review-header">
           <div className="review-header-user-info">
             <h4 className="reviewer-info">{review.username}</h4>
-            <p className="review-timestamp">Reviewed on {review.created_at.slice(0, 16)}
+            <p className="review-timestamp">{[...Array(5)].map((_, index) => (
+              <span key={index}>
+                {index < review.rating ? '★' : '☆'}
+              </span>
+              ))} on {review.created_at.slice(0, 16)}
               {isReviewUpdated && (<span className="review-timestamp">; Edited {review.updated_at.slice(0, 16)}</span>)}
             </p>
           </div>
@@ -45,7 +49,6 @@ const ReviewContainer = ({review}) => {
                 >Delete</button>
               </div>
             }
-            <p className="review-header-user-rating">⭐ {review.rating}/5</p>
           </div>
         </div>
 
@@ -55,7 +58,6 @@ const ReviewContainer = ({review}) => {
         </div>
 
       </div>
-
     </span>
   )
 }
