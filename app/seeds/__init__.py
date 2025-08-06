@@ -15,7 +15,9 @@ seed_commands = AppGroup('seed')
 # Creates the `flask seed all` command
 @seed_commands.command('all')
 def seed():
-    if environment != 'production':
+    print("Running Seeder...")
+    if environment == 'production':
+        print("Undoing Production Data...")
         # Before seeding in production, you want to run the seed undo
         # command, which will truncate all tables prefixed with
         # the schema name (see comment in users.py undo_users function).
@@ -26,12 +28,13 @@ def seed():
         undo_tags()
         undo_website_tags()
 
+    print("Seeding Data...")
     seed_users()
     seed_websites()
     seed_reviews()
     seed_tags()
     seed_website_tags()
-
+    print("Done Seeding")
     # Add other seed functions here
 
 
