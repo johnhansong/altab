@@ -16,79 +16,27 @@ seed_commands = AppGroup('seed')
 # Creates the `flask seed all` command
 @seed_commands.command('all')
 def seed():
-    print(f"Environment: {environment}")
-    print(f"Schema: {SCHEMA}")
-    sys.stdout.flush()
+    print("Running Seeder...")
+    if environment == 'production':
+        print("Undoing Production Data...")
+        # Before seeding in production, you want to run the seed undo
+        # command, which will truncate all tables prefixed with
+        # the schema name (see comment in users.py undo_users function).
+        # Make sure to add all your other model's undo functions below
+        undo_users()
+        undo_websites()
+        undo_reviews()
+        undo_tags()
+        undo_website_tags()
 
-    try:
-        if environment == "production":
-            print("Undoing seeder data...")
-            sys.stdout.flush()
-
-            undo_website_tags()
-            print("✅ Undid website_tags")
-            sys.stdout.flush()
-
-            undo_reviews()
-            print("✅ Undid reviews")
-            sys.stdout.flush()
-
-            undo_tags()
-            print("✅ Undid tags")
-            sys.stdout.flush()
-
-            undo_websites()
-            print("✅ Undid websites")
-            sys.stdout.flush()
-
-            undo_users()
-            print("✅ Undid users")
-            sys.stdout.flush()
-
-        print("Running seeders...")
-        seed_users()
-        print("✅ Seeded users")
-
-        seed_websites()
-        print("✅ Seeded websites")
-
-        seed_reviews()
-        print("✅ Seeded reviews")
-
-        seed_tags()
-        print("✅ Seeded tags")
-
-        seed_website_tags()
-        print("✅ Seeded website_tags")
-
-        print("✅ Seeding complete.")
-    except Exception as e:
-        import traceback
-        print("❌ Seeding failed:")
-        traceback.print_exc()
-        sys.stdout.flush()
-        raise  # Re-raise to cause container to fail if needed
-    # print("Running Seeder...")
-    # if environment == 'production':
-    #     print("Undoing Production Data...")
-    #     # Before seeding in production, you want to run the seed undo
-    #     # command, which will truncate all tables prefixed with
-    #     # the schema name (see comment in users.py undo_users function).
-    #     # Make sure to add all your other model's undo functions below
-    #     undo_users()
-    #     undo_websites()
-    #     undo_reviews()
-    #     undo_tags()
-    #     undo_website_tags()
-
-    # print("Seeding Data...")
-    # seed_users()
-    # seed_websites()
-    # seed_reviews()
-    # seed_tags()
-    # seed_website_tags()
-    # print("Done Seeding")
-    # # Add other seed functions here
+    print("Seeding Data...")
+    seed_users()
+    seed_websites()
+    seed_reviews()
+    seed_tags()
+    seed_website_tags()
+    print("Done Seeding")
+    # Add other seed functions here
 
 
 # Creates the `flask seed undo` command

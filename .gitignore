@@ -23,6 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.py[cod]
 package.json
 package-lock.json
 __pycache__/
