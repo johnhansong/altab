@@ -50,5 +50,8 @@ def seed_website_tags():
 
 
 def undo_website_tags():
-  db.session.execute(text("DELETE FROM website_tags"))
+  if environment == "production":
+    db.session.execute(f"TRUNCATE table {SCHEMA}.website_tags RESTART IDENTITY CASCADE;")
+  else:
+    db.session.execute(text("DELETE FROM website_tags"))
   db.session.commit()
