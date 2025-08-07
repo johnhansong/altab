@@ -54,7 +54,7 @@ def upgrade():
     sa.Column('preview_img', sa.String(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], [f'{SCHEMA}.users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     if environment == "production":
@@ -69,8 +69,8 @@ def upgrade():
     sa.Column('review', sa.String(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.ForeignKeyConstraint(['website_id'], ['websites.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], [f'{SCHEMA}.users.id'], ),
+    sa.ForeignKeyConstraint(['website_id'], [f'{SCHEMA}.websites.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     if environment == "production":
@@ -79,8 +79,8 @@ def upgrade():
     op.create_table('website_tags',
     sa.Column('website_id', sa.Integer(), nullable=False),
     sa.Column('tag_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['tag_id'], ['tags.id'], ),
-    sa.ForeignKeyConstraint(['website_id'], ['websites.id'], ),
+    sa.ForeignKeyConstraint(['tag_id'], [f'{SCHEMA}.tags.id'], ),
+    sa.ForeignKeyConstraint(['website_id'], [f'{SCHEMA}.websites.id'], ),
     sa.PrimaryKeyConstraint('website_id', 'tag_id')
     )
     if environment == "production":
