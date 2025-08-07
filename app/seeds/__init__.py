@@ -4,6 +4,7 @@ from .tags import seed_tags, undo_tags
 from .users import seed_users, undo_users
 from .websites import seed_websites, undo_websites
 from .website_tags import seed_website_tags, undo_website_tags
+import sys
 
 from app.models.db import db, environment, SCHEMA
 
@@ -17,29 +18,55 @@ seed_commands = AppGroup('seed')
 def seed():
     print(f"Environment: {environment}")
     print(f"Schema: {SCHEMA}")
+    sys.stdout.flush()
 
     try:
         if environment == "production":
             print("Undoing seeder data...")
-            undo_website_tags()
-            undo_reviews()
-            undo_tags()
-            undo_websites()
-            undo_users()
-            print("✅ Undo complete.")
+            sys.stdout.flush()
 
-        print("Seeding...")
+            undo_website_tags()
+            print("✅ Undid website_tags")
+            sys.stdout.flush()
+
+            undo_reviews()
+            print("✅ Undid reviews")
+            sys.stdout.flush()
+
+            undo_tags()
+            print("✅ Undid tags")
+            sys.stdout.flush()
+
+            undo_websites()
+            print("✅ Undid websites")
+            sys.stdout.flush()
+
+            undo_users()
+            print("✅ Undid users")
+            sys.stdout.flush()
+
+        print("Running seeders...")
         seed_users()
+        print("✅ Seeded users")
+
         seed_websites()
+        print("✅ Seeded websites")
+
         seed_reviews()
+        print("✅ Seeded reviews")
+
         seed_tags()
+        print("✅ Seeded tags")
+
         seed_website_tags()
+        print("✅ Seeded website_tags")
 
         print("✅ Seeding complete.")
     except Exception as e:
         import traceback
         print("❌ Seeding failed:")
         traceback.print_exc()
+        sys.stdout.flush()
         raise  # Re-raise to cause container to fail if needed
     # print("Running Seeder...")
     # if environment == 'production':
