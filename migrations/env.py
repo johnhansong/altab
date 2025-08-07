@@ -88,6 +88,8 @@ def run_migrations_online():
             connection=connection,
             target_metadata=target_metadata,
             process_revision_directives=process_revision_directives,
+            include_schemas=True,
+            version_table_schema=SCHEMA if environment == "production" else None,
             **current_app.extensions['migrate'].configure_args
         )
         # Create a schema (only in production)
