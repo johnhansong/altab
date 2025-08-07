@@ -24,5 +24,4 @@ COPY . .
 # RUN flask seed all
 
 # CMD flask db upgrade && flask seed all && gunicorn app:app
-CMD sh -c "flask db upgrade && flask seed all || echo 'Seeding failed (possibly due to duplicates)' && gunicorn app:app"
-
+CMD flask db upgrade && flask seed all && gunicorn app:app
