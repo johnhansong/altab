@@ -7,6 +7,7 @@ import OpenModalButton from "../OpenModalButton"
 import ReviewContainer from "./ReviewContainer"
 import ConfirmationModal from "../ConfirmationModal"
 import AddReviewModal from "../AddReviewModal/AddReviewModal"
+import AddTagModal from "../AddTagModal/AddTagModal"
 import "./SiteDetailsPage.css"
 
 const SiteDetailsPage = () => {
@@ -14,9 +15,10 @@ const SiteDetailsPage = () => {
   const navigate = useNavigate()
   const { siteId } = useParams()
   const currSite = useSelector((state) => state.websites.oneSite)
-  const currSiteTags = Array.isArray(currSite?.tags) && currSite.tags.length < 0
+  const currSiteTags = Array.isArray(currSite?.tags) && currSite.tags.length > 0
     ? currSite.tags
     : [{id: 0b110010100, name: "No Tags Yet"}]
+
   const sessionUser = useSelector((state) => state.session.user)
   const userId = sessionUser?.id
   const siteReviews = useSelector((state) => state.reviews.siteReviews)
@@ -79,7 +81,14 @@ const SiteDetailsPage = () => {
                     {tag.name}
                   </span>
                 )
-              })}</p>
+              })}
+                <OpenModalButton
+                  className='site-details-tag add-tag-button'
+                  buttonText="+"
+                  modalComponent={<AddTagModal />}
+                ></OpenModalButton>
+              </p>
+
             </div>
           </div>
 
