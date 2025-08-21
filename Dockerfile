@@ -4,23 +4,13 @@ RUN apk add build-base
 
 RUN apk add postgresql-dev gcc python3-dev musl-dev
 
-ARG FLASK_APP
-ARG FLASK_ENV
-ARG DATABASE_URL
+ARG FLASK_APP=app
+ARG FLASK_ENV=production
 ARG SCHEMA
-ARG SECRET_KEY
-ARG S3_BUCKET
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
 
-ENV FLASK_APP=$FLASK_APP
-ENV FLASK_ENV=$FLASK_ENV
-ENV DATABASE_URL=$DATABASE_URL
-ENV SCHEMA=$SCHEMA
-ENV SECRET_KEY=$SECRET_KEY
-ENV S3_BUCKET=$S3_BUCKET
-ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+ENV FLASK_APP=${FLASK_APP}
+ENV FLASK_ENV=${FLASK_ENV}
+ENV SCHEMA=${SCHEMA}
 
 WORKDIR /var/www
 
@@ -30,7 +20,8 @@ RUN pip install psycopg2
 
 COPY . .
 
-RUN flask db upgrade
-RUN flask seed all
+# RUN flask db upgrade
+# RUN flask seed all
 
-CMD gunicorn app:app
+# CMD flask db upgrade && flask seed all && gunicorn app:app
+CMD sh -c "flask db upgrade && flask seed all && gunicorn app:app"

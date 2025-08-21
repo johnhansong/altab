@@ -6,3 +6,5 @@
 
 // Running frontend: npm run dev
 // running backend with flask: flask run
+
+// To delete all pychache folders: find . -name '__pycache__' -exec rm -r {} +
