@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from app.utils.awsS3 import allowed_file
-from app.models import Website, Review, db
+from app.models import Website, Review, Tag, db
 from app.forms import WebsiteForm, ReviewForm
 from app.utils.awsS3 import (
   get_unique_filename, upload_file_to_S3
@@ -39,7 +40,7 @@ def get_website_details(website_id):
 
 #   return {'websites': [site.to_dict() for site in user_sites]}, 200
 
-@website_routes.route('/<int:website_id>')
+@website_routes.route('/<int:website_id>/tags')
 def get_tags_by_website(website_id):
   website = Website.query.get(website_id)
   if not website:
@@ -57,43 +58,48 @@ def post_website():
   csrf_token = request.cookies.get('csrf_token')
   if not csrf_token:
     return {"errors": {"message": "Missing CSRF token"}}, 400
-
   form['csrf_token'].data = csrf_token
 
+  form.tags.choices = [(t.id, t.name) for t in Tag.query.order_by(Tag.name).all()]
 
-  if form.validate_on_submit():
-    preview_img = None    #default to none in case no img submitted
-    img = form.preview_img.data
+  if not form.validate_on_submit():
+    return {'errors': form.errors}, 400
 
-    if img:
-      if not allowed_file(img.filename):
-        return {"errors": {"preview_img": "File type not allowed"}}, 400
-      try:
-        img.filename = get_unique_filename(img.filename)
-        upload = upload_file_to_S3(img)
+  preview_img = None    #default to none in case no img submitted
+  img = form.preview_img.data
+  if img:
+    if not allowed_file(img.filename):
+      return {"errors": {"preview_img": "File type not allowed"}}, 400
+    try:
+      img.filename = get_unique_filename(img.filename)
+      upload = upload_file_to_S3(img)
+      if "url" not in upload:
+        return {"error": "Error uploading in img: no URL in upload"}, 401
+      preview_img = upload["url"]
+    except Exception as e:
+      return {"error": f"Img upload failed: {str(e)}"}, 500
 
-        if "url" not in upload:
-          return {"error": "Error uploading in img: no URL in upload"}, 401
+  new_site = Website(
+    user_id = current_user.id,
+    name=form.name.data,
+    link=form.link.data,
+    description=form.description.data,
+    preview_img=preview_img
+  )
 
-        preview_img = upload["url"]
+  tag_ids = list(set(form.tags.data or []))
+  if tag_ids:
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+    found = {t.id for t in tags}
+    missing = sorted(set(tag_ids) - found)
+    if missing:
+      return {'errors': {'tags': f'Unknown tag IDs: {missing}'}}
+    new_site.tags.extend(tags)
 
-      except Exception as e:
-        return {"error": f"Img upload failed: {str(e)}"}, 500
+  db.session.add(new_site)
+  db.session.commit()
 
-    new_site = Website(
-      user_id = current_user.id,
-      name=form.name.data,
-      link=form.link.data,
-      description=form.description.data,
-      preview_img=preview_img
-    )
-
-    db.session.add(new_site)
-    db.session.commit()
-
-    return new_site.to_dict(), 201
-
-  return {'errors': form.errors}, 400
+  return new_site.to_dict(), 201
 
 
 @website_routes.route('/<int:website_id>', methods=['PUT'])
@@ -107,33 +113,36 @@ def update_site(website_id):
     return {'errors': {'message': 'Unauthorized'}}, 401
 
   form = WebsiteForm()
-  form['csrf_token'].data = request.cookies['csrf_token']
+  form['csrf_token'].data = request.cookies.get('csrf_token')
 
-  if form.validate_on_submit():
-    site_to_update.user_id = current_user.id
-    site_to_update.name=form.name.data
-    site_to_update.link=form.link.data
-    site_to_update.description=form.description.data
+  form.tags.choices = [(t.id, t.name) for t in Tag.query.order_by(Tag.name).all()]
 
-    img=form.preview_img.data
+  if not form.validate_on_submit():
+    return {'errors': form.errors}, 400
 
-    if img:
-      try:
-        img.filename = get_unique_filename(img)
-        upload = upload_file_to_S3(img)
+  site_to_update.user_id = current_user.id
+  site_to_update.name=form.name.data
+  site_to_update.link=form.link.data
+  site_to_update.description=form.description.data
 
-        if "url" not in upload:
-          return {"error": "Error uploading image: no URL in upload"}, 400
+  img=form.preview_img.data
+  if img:
+    try:
+      img.filename = get_unique_filename(img)
+      upload = upload_file_to_S3(img)
+      if "url" not in upload:
+        return {"error": "Error uploading image: no URL in upload"}, 400
+      site_to_update.preview_img = upload["url"]
+    except Exception as e:
+      return {"error": f"Image upload failed: {str(e)}"}, 500
 
-        site_to_update.preview_img = upload["url"]
+  if 'tags' in request.form:
+    tag_ids = list(set(form.tags.data or []))
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all() if tag_ids else []
+    site_to_update.tags = tags
 
-      except Exception as e:
-        return {"error": f"Image upload failed: {str(e)}"}, 500
-
-    db.session.commit()
-    return site_to_update.to_dict(), 200
-
-  return {'errors': form.errors}, 400
+  db.session.commit()
+  return site_to_update.to_dict(), 200
 
 
 
@@ -154,7 +163,7 @@ def delete_website(website_id):
 
 
 #review routes
-@website_routes.route('<int:website_id>/reviews')
+@website_routes.route('/<int:website_id>/reviews')
 def site_reviews(website_id):
   """GET all reviews for a website"""
   site_reviews = Review.query.filter_by(website_id=website_id).all()
@@ -165,7 +174,7 @@ def site_reviews(website_id):
   return {'reviews': [review.to_dict() for review in site_reviews]}, 200
 
 
-@website_routes.route('<int:website_id>/review', methods=["POST"])
+@website_routes.route('/<int:website_id>/review', methods=["POST"])
 @login_required
 def post_review(website_id):
   """Create review for a website"""
@@ -195,3 +204,44 @@ def post_review(website_id):
     return new_review.to_dict(), 201
 
   return form.errors, 401
+
+
+@website_routes.route('/<int:website_id>/tags', methods=["PUT"])
+@login_required
+def edit_site_tags(website_id):
+  """edit website tags"""
+  curr_site = Website.query.get(website_id)
+  if not curr_site:
+    return {"errors": {'message': 'Website not found'}}, 404
+
+  if curr_site.user_id != current_user.id:
+    return {"errors": {'message': 'Forbidden'}}, 403
+
+  data = request.get_json(silent=True) or {}
+
+  if "tags" not in data or not isinstance(data["tags"], list):
+    return {"errors": {"tags": "Provide 'tags' as an array (can be empty)"}}
+
+  raw_ids = data['tags']
+  try:
+    tag_ids = list({int(t) for t in raw_ids})
+  except (TypeError, ValueError):
+    return {"errors": {"tags": "All tag IDs must be integers."}}, 400
+
+  if len(tag_ids) > 50:
+    return {"errors": {"tags": "Too many tags; maximum 50"}}, 400
+
+  if not tag_ids:
+    curr_site.tags = []
+    db.session.commit()
+    return jsonify(curr_site.to_dict()), 200
+
+  tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+  found_ids = {t.id for t in tags}
+  missing = sorted(set(tag_ids) - found_ids)
+  if missing:
+    return {"errors": {"tags": f"Unknown tag IDs:{missing}"}}
+
+  curr_site.tags = tags
+  db.session.commit()
+  return jsonify(curr_site.to_dict()), 200

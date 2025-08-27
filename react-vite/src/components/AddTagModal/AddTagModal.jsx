@@ -1,45 +1,86 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import CreatableSelect from "react-select/creatable";
 import { useDispatch, useSelector } from "react-redux"
-import { fetchAllTags,removeSitefromTag, appendSitetoTag} from "../../redux/tagsReducer";
+import { fetchAllTags, createTag } from "../../redux/tagsReducer";
+import { updateSiteTags } from "../../redux/websiteReducer";
+import { useModal } from "../../context/Modal";
 import './AddTagModal.css'
 
+const toOption = (tag) => ({ label: tag.name, value: tag.id });
+
 const AddTagModal = () => {
-  const dispatch = useDispatch()
-  const currSite = useSelector((state) => state.websites.oneSite)
-  const siteTags = currSite.tags
-  const allTags = useSelector((state) => state.tags.allTags || {})
-  const tagsArray = Object.values(allTags)
+  const dispatch = useDispatch();
+  const currSite = useSelector((state) => state.websites.oneSite) || {};
+  const siteTags = currSite.tags;
+  const allTagsObj = useSelector((state) => state.tags.allTags || {});
+  const allTags = useMemo(() => Object.values(allTagsObj), [allTagsObj]);
+  const { closeModal } = useModal();
 
-  const [options, setOptions] = useState([])
-  const [selectedTags, setSelectedTags] = useState([])
+  const [options, setOptions] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [saving, setSaving] = useState(false);
+  const [creating, setCreating] = useState(false);
 
-  console.log("alltags", allTags)
+  // Loading all tags at mount
+  useEffect(() => {
+    dispatch(fetchAllTags());
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(fetchAllTags())
-  }, [dispatch])
+    setOptions(allTags.map(toOption));
+  }, [allTags]);
 
   useEffect(() => {
-    setOptions(tagsArray.map(tag => ({
-      label: tag.name,
-      value: tag.id
-    })));
-  }, [allTags])
+    setSelectedTags(siteTags.map(toOption));
+  }, [siteTags]);
 
-  useEffect(() => {
-    setSelectedTags(siteTags.map(tag => ({
-      label: tag.name,
-      value: tag.id
-    })));
-  }, [siteTags])
+  const handleChange = (newValue) => {
+    setSelectedTags(newValue || []);
+  };
 
-  const handleAddTag = () => {
-    
-  }
+  const handleCreate = async (inputValue) => {
+    const name = (inputValue || "").trim();
+    if (!name) return;
 
-  const handleChange = (selectedOptions) => {
+    const existing = options.find(option => option.label.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      setSelectedTags(prev =>
+        prev.some(p => p.value === existing.value) ? prev : [...prev, existing]
+      );
+      return;
+    }
 
+    try {
+      setCreating(true);
+
+      const newTag = await dispatch(createTag({name, description: ""}));
+      if (!newTag) return;
+
+      const newOption = toOption(newTag);
+      setSelectedTags(prev => [...prev, newOption]);
+
+      setOptions(prev => {
+        if (prev.some(opt => opt.value === newOption.value)) return prev;
+        return [...prev, newOption]
+      });
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!currSite.id) return;
+    setSaving(true);
+    try {
+      const tagIds = selectedTags.map(opt => opt.value);
+      const updatedSite = await dispatch(updateSiteTags(currSite.id, tagIds));
+      if (updatedSite?.tags) setSelectedTags(updatedSite.tags.map(toOption));
+    } catch (err) {
+      console.error("Save tags failed", err)
+    } finally {
+      setSaving(false);
+      closeModal()
+    }
   }
 
   return (
@@ -53,7 +94,17 @@ const AddTagModal = () => {
         isMulti
         options={options}
         value={selectedTags}
+        onChange={handleChange}
+        onCreateOption={handleCreate}
+        isClearable
+        isDisabled={creating || saving}
+        placeholder={creating ? "Creating..." : "Add or create tags..."}
+        noOptionsMessage={() => "Type to create a new tag"}
       />
+
+      <button onClick={handleSave} disabled={saving || creating}>
+        {saving ? "Saving..." : "Save Tags"}
+      </button>
     </div>
   )
 }

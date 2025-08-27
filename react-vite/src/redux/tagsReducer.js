@@ -69,23 +69,32 @@ export const fetchOneTag = (tagId) => async (dispatch) => {
   }
 }
 
-export const createTag = (tag) => async (dispatch) => {
+export const createTag = ({ name, description="", websiteIds=[] }) => async (dispatch) => {
+  const form = new FormData()
+
+  const cleanedName = (name || "").trim();
+  if (!cleanedName) throw {errors: { name: "Name is required" }}
+
+  form.append("name", name);
+  form.append("description", description);
+
+  const siteIds = [...new Set(websiteIds.map(Number))].filter(Number.isInteger)
+  siteIds.forEach(id => form.append("website_ids", id));
+
   try {
     const res = await fetch(`/api/tags`, {
       method: "POST",
-      body: JSON.stringify(tag),
-      headers: {"Content-Type": "application/json"}
+      body: form,
+      credentials: 'include',
     });
-    if (res.ok) {
-      const newTag = await res.json()
-      dispatch(addTag(newTag))
-      return newTag;
-    } else {
-      const err = await res.json();
-      throw err
-    }
+    const payload = await res.json();
+    if (!res.ok) throw payload
+
+    dispatch(addTag(payload))
+    return payload
   } catch(err) {
     console.error("Error creating tag", err)
+    throw err;
   }
 }
 
@@ -93,7 +102,7 @@ export const appendSitetoTag = (tagId, siteId) => async (dispatch) => {
   try {
     const res = await fetch(`/api/tags/${tagId}/websites/${siteId}`, {
       method: "POST",
-      headers: {"Content-Type": "application/json"}
+      credentials: 'include',
     })
     if (!res.ok) {
       const err = await res.json()

@@ -1,5 +1,7 @@
 .add-tag-modal-wrapper {
   padding: 10px 20px;
+  min-width: 350px;
+  min-height: 200px;
 }
 
 .add-tag-modal-select {

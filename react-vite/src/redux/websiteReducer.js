@@ -41,7 +41,6 @@ export const clearSiteState = () => {
   }
 }
 
-
 //*---------THUNKS------------
 // Get all Websites
 export const fetchAllSites = () => async (dispatch) => {
@@ -99,6 +98,28 @@ export const updateWebsite = (formData, websiteId) => async (dispatch) => {
     }
   } catch (err) {
     console.error("Error editing website", err)
+    throw err
+  }
+}
+
+export const updateSiteTags = (siteId, tagIds) => async (dispatch) => {
+  try {
+    const res = await fetch(`/api/sites/${siteId}/tags`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tags: tagIds })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw err;
+    }
+
+    const updatedSite = await res.json();
+    dispatch(addSite(updatedSite));
+    return updatedSite;
+  } catch (err) {
+    console.error("Error editing website tags", err)
     throw err
   }
 }
