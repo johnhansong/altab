@@ -51,7 +51,7 @@ const doomedTag = (tagId) => {
 
 //*---------THUNKS------------
 export const fetchAllTags = () => async (dispatch) => {
-  const res = await fetch('/api/tags')
+  const res = await fetch('/api/tags/')
   if (res.ok) {
     const data = await res.json()
     const tags = data.tags
@@ -82,7 +82,7 @@ export const createTag = ({ name, description="", websiteIds=[] }) => async (dis
   siteIds.forEach(id => form.append("website_ids", id));
 
   try {
-    const res = await fetch(`/api/tags`, {
+    const res = await fetch(`/api/tags/`, {
       method: "POST",
       body: form,
       credentials: 'include',

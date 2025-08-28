@@ -47,7 +47,10 @@ def get_tags_by_website(website_id):
     return {'errors': {'message': 'No websites available'}}, 404
 
   tags = website.tags
-  return {'tags': tags.toDict()}, 200
+  return {
+    'website': website.name,
+    'tags': [{'id': t.id, 'name': t.name} for t in tags]
+    }, 200
 
 
 @website_routes.route('/', methods=['POST'])
@@ -128,7 +131,7 @@ def update_site(website_id):
   img=form.preview_img.data
   if img:
     try:
-      img.filename = get_unique_filename(img)
+      img.filename = get_unique_filename(img.filename)
       upload = upload_file_to_S3(img)
       if "url" not in upload:
         return {"error": "Error uploading image: no URL in upload"}, 400

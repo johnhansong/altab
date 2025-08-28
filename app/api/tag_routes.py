@@ -42,6 +42,7 @@ def post_tag():
   )
 
   if not form.validate_on_submit():
+    print("TagForm errors:", form.errors)
     return {'errors': form.errors}, 400
 
   name = (form.name.data or "").strip()
@@ -67,7 +68,7 @@ def post_tag():
 
   db.session.add(new_tag)
   db.session.commit()
-  return new_tag.to_dict(include_websites=True), 201
+  return new_tag.to_dict(), 201
 
 
 #Add Website to a Tag

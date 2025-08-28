@@ -17,7 +17,8 @@ class Tag(db.Model):
   websites = db.relationship(
     'Website',
     secondary=website_tags,
-    back_populates='tags'
+    back_populates='tags',
+    lazy='selectin'
   )
 
   def to_dict(self, include_websites=False):
