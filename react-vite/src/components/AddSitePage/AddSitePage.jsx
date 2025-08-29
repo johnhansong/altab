@@ -1,37 +1,58 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import Select from 'react-select'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createSite, updateWebsite, clearSiteState } from '../../redux/websiteReducer'
 import { fetchOneSite } from '../../redux/websiteReducer'
+import { fetchAllTags } from '../../redux/tagsReducer'
 import { isValidUrl } from '../../../bandaid'
 import OpenModalButton from '../OpenModalButton'
 import LoginFormModal from '../LoginFormModal'
 import './AddSitePage.css'
 
+const toOption = (tag) => ({label: tag.name, value: tag.id})
+
 function AddSite ({toggle}) {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const { siteId } = useParams();
+
   const sessionUser = useSelector((state) => state.session.user)
   const sessionSite = useSelector((state) => state.websites.oneSite)
-  const { siteId } = useParams();
+  const allTagsObj = useSelector((state) => state.tags.allTags)
+  const allTags = useMemo(() => Object.values(allTagsObj), [allTagsObj])
+
   const siteExists = Object.values(sessionSite).length
 
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [link, setLink] = useState("")
   const [image, setImage] = useState("")
+  const [tagOptions, setTagOptions] = useState([])
+  const [selectedTags, setSelectedTags] = useState([])
   const [errors, setErrors] = useState({})
 
   const handleName = (e) => setName(e.target.value)
   const handleDescription = (e) => setDescription(e.target.value)
   const handleLink = (e) => setLink(e.target.value)
-  const handleImage = (e) => setImage(e.target.files[0])
+  const handleImage = (e) => setImage(e.target.files?.[0] || [])
+  const handleTags = (e) => setSelectedTags(e || [])
+
+  useEffect(() => {
+    dispatch(fetchAllTags());
+  }, [dispatch])
+
+  useEffect(() =>{
+    setTagOptions(allTags.map(toOption))
+  }, [allTags])
 
   useEffect(() => {
     if (toggle === "create") {
       setName("")
       setDescription("")
       setLink("")
+      setSelectedTags([])
+      setImage(null);
     }
     if (siteId && toggle === "update") {
       dispatch(fetchOneSite(siteId))
@@ -44,11 +65,12 @@ function AddSite ({toggle}) {
       setName(sessionSite.name || "")
       setDescription(sessionSite.description || "")
       setLink(sessionSite.link || "")
-      setImage(sessionSite.image || "")
+      setSelectedTags(sessionSite.tags.map(toOption))
+      setImage(sessionSite.preview_img || "")
     }
   }, [sessionSite, siteExists, siteId])
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const error = {}
@@ -73,6 +95,8 @@ function AddSite ({toggle}) {
         return;
       }
 
+      const tagIds = selectedTags.map(option => option.value)
+
       const formData = new FormData();
       formData.append("name", name);
       formData.append("link", link);
@@ -80,18 +104,15 @@ function AddSite ({toggle}) {
       if (image) {
         formData.append("preview_img", image);
       }
+      tagIds.forEach(id => formData.append("tags", id))
 
       try {
-        let newSite;
-        if (siteId) {
-          newSite = await dispatch(updateWebsite(formData, siteId))
-        } else {
-          newSite = await dispatch(createSite(formData))
-        }
+        const updatedOrNewSite = siteId
+          ? await dispatch(updateWebsite(formData, siteId))
+          : await dispatch(createSite(formData))
 
-        if (newSite) {
-          navigate(`/sites/${newSite.id}`)
-        }
+        if (updatedOrNewSite) navigate(`/sites/${updatedOrNewSite.id}`)
+
       } catch (res) {
         const data = await res.json();
         if (data?.errors) {
@@ -162,6 +183,19 @@ function AddSite ({toggle}) {
               value={link}
             ></input>
             <p className="error">{errors.link}</p>
+          </div>
+
+          <div className="addsite-input">
+          <h3>Website Tags</h3>
+            <Select
+              className="add-tags-to-website"
+              isMulti
+              options={tagOptions}
+              value={selectedTags}
+              onChange={handleTags}
+              isClearable
+            />
+            <p className="error">{errors.tags}</p>
           </div>
 
           <div className="addsite-input">

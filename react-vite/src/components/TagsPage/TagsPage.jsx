@@ -38,7 +38,7 @@ const TagsPage = () => {
                   {groupedTags[letter]?.map(tag => (
                     <li key={tag.id}
                         className="tag"
-                        onClick={() => navigate(`/tags/${tag.id}`)}
+                        onClick={() => navigate(`/sites?tag=${tag.id}`)}
                     >
                       {tag.name}
                     </li>

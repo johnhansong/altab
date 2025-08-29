@@ -78,7 +78,7 @@
   width: 100px;
   height: 25px;
   border-radius: 6px;
-  box-shadow: 0px 3px 4px rgba(132, 211, 119, 0.624);
+  box-shadow: 0px 3px 4px rgba(119, 162, 211, 0.624);
   border: none;
   cursor: pointer;
   color: black;
@@ -95,7 +95,7 @@
 
 .sd-circle-btn:hover {
   width: 100px;
-  box-shadow: 0px 4px 8px rgba(19, 113, 185, 0.4);
+  box-shadow: 0px 4px 8px rgba(19, 113, 185, 0.6);
   border-radius: 8px;
   color: rgb(0, 0, 0);
   font-size: 14px;
@@ -215,12 +215,6 @@
     margin: 0;
     justify-content: center;
     width: 90vw;
-  }
-
-  .site-container-btns {
-    display: flex;
-    margin-top: 10px;
-    align-items: stretch;
   }
 
   .site-reviews-block {
