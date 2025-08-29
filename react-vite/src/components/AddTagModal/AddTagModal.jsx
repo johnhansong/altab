@@ -85,26 +85,31 @@ const AddTagModal = () => {
 
   return (
     <div className="add-tag-modal-wrapper">
-      <h3 className="add-tag-modal-header">
-        Tags for {currSite.name}
-      </h3>
+      <div>
+        <h3 className="add-tag-modal-header">
+          Tags for {currSite.name}
+        </h3>
 
-      <CreatableSelect
-        className="add-tag-modal-select"
-        isMulti
-        options={options}
-        value={selectedTags}
-        onChange={handleChange}
-        onCreateOption={handleCreate}
-        isClearable
-        isDisabled={creating || saving}
-        placeholder={creating ? "Creating..." : "Add or create tags..."}
-        noOptionsMessage={() => "Type to create a new tag"}
-      />
+        <CreatableSelect
+          className="add-tag-modal-select"
+          isMulti
+          options={options}
+          value={selectedTags}
+          onChange={handleChange}
+          onCreateOption={handleCreate}
+          isClearable
+          isDisabled={creating || saving}
+          placeholder={creating ? "Creating..." : "Add or create tags..."}
+          noOptionsMessage={() => "Type to create a new tag"}
+        />
+      </div>
 
-      <button onClick={handleSave} disabled={saving || creating}>
-        {saving ? "Saving..." : "Save Tags"}
-      </button>
+      <div className="tags-modal-buttons">
+        <button className="tags-modal-cancel-btn" onClick={closeModal}>Cancel</button>
+        <button className="tags-modal-save-btn" onClick={handleSave} disabled={saving || creating}>
+          {saving ? "Saving..." : "Save Tags"}
+        </button>
+      </div>
     </div>
   )
 }

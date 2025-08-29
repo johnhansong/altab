@@ -127,7 +127,7 @@ const SiteDetailsPage = () => {
 
                 <button className="sd-circle-btn"
                         id="sd-green-btn"
-                        onClick={() => {window.location.href = `${currSite.link}`}}
+                        onClick={() => window.open(currSite.link, '_blank', 'noopener')}
                 >Visit</button>
               </div>
             }

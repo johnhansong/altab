@@ -72,7 +72,7 @@
   flex-direction: column;
   width: 225px;
   height: 275px;
-  border: 2px solid rgba(240, 248, 255, 0.374);
+  border: 1px solid rgba(191, 218, 242, 0.374);
   background-color: rgba(240, 248, 255, 0.628);
   border-radius: 10%;
   padding: 15px 10px;
@@ -80,7 +80,7 @@
 }
 
 .landing-page-site-container:hover {
-  border-color:#008bf8;
+  border-color:#36a5f9cd;
   box-shadow: 0 4px 18px 0 rgba(0,0,0,0.25);
 }
 
