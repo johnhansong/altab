@@ -14,13 +14,20 @@ ENV SCHEMA=${SCHEMA}
 
 WORKDIR /var/www
 
+#version checker for deploy version bug
+ARG GIT_SHA
+ARG BUILD_TIME
+ENV GIT_SHA=${GIT_SHA}
+ENV BUILD_TIME=${BUILD_TIME}
+
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 RUN pip install psycopg2
 
 COPY . .
 
-RUN flask db upgrade
-RUN flask seed all
+# RUN flask db upgrade
+# RUN flask seed all
 
-CMD gunicorn app:app
+CMD flask db upgrade && flask seed all && gunicorn app:app
+# CMD sh -c "flask db upgrade && flask seed all && gunicorn app:app"
