@@ -50,7 +50,8 @@ function ProfileButton() {
             <div className="logged-in-dropdown-wrapper">
               <li>Hi, {user.username}</li>
               <li>{user.email}</li>
-              <li>
+              <li className="profile-dropdown-buttons">
+                <button className='toProfile-btn'>Profile</button>
                 <button className="logout-btn" onClick={logout}>Log Out</button>
               </li>
             </div>
