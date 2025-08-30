@@ -19,7 +19,7 @@ const TagsPage = () => {
     return acc;
   }, {});
 
-  console.log('groupedtags', groupedTags)
+  // console.log('groupedtags', groupedTags)
 
   useEffect(() => {
     dispatch(fetchAllTags())

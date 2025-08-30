@@ -20,20 +20,20 @@ from flask import Blueprint
 
 bp = Blueprint("version", __name__)
 
-@bp.get("/__version")
-def version():
-    info = {
-        "backend_git_sha": os.getenv("GIT_SHA", "unknown"),
-        "build_time": os.getenv("BUILD_TIME", "unknown"),
-        "has_frontend_dist": pathlib.Path(".../react-vite/dist/index.html").exists(),
-        "frontend_index_mtime": (
-            time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(pathlib.Path("react-vite/dist/index.html").stat().st_mtime))
-            if pathlib.Path("react-vite/dist/index.html").exists() else None
-        )
-    }
-    return jsonify(info)
+# @bp.get("/__version")
+# def version():
+#     info = {
+#         "backend_git_sha": os.getenv("GIT_SHA", "unknown"),
+#         "build_time": os.getenv("BUILD_TIME", "unknown"),
+#         "has_frontend_dist": pathlib.Path(".../react-vite/dist/index.html").exists(),
+#         "frontend_index_mtime": (
+#             time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(pathlib.Path("react-vite/dist/index.html").stat().st_mtime))
+#             if pathlib.Path("react-vite/dist/index.html").exists() else None
+#         )
+#     }
+#     return jsonify(info)
 
-app.register_blueprint(bp)
+# app.register_blueprint(bp)
 
 # Setup login manager
 login = LoginManager(app)
