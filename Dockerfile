@@ -1,3 +1,13 @@
+FROM node:20-alpine AS frontend
+WORKDIR /frontend
+COPY react-vite/package*.json ./
+RUN npm ci
+COPY react-vite/ ./
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
+RUN npm run build  # -> /frontend/dist
+
+
 FROM python:3.9.18-alpine3.18
 
 RUN apk add build-base
