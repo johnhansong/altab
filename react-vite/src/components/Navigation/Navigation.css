@@ -74,21 +74,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  padding: 5px;
-  border: 1px solid rgba(131,168,255,255);
-  border-radius: 10%;
+  padding: 10px 5px;
+  box-shadow: 0px 3px 4px rgba(17, 22, 16, 0.2);
+  border-radius: 10px;
   position: absolute;
-  background-color: rgb(243, 248, 255);
-  right: 40px;
+  background-color: rgb(249, 249, 249);
+  right: 20px;
   top: 50px;
 }
+
 
 .login-signup-menu-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  border-radius: 10%;
   height: 60px;
   width: 65px;
 }
@@ -96,11 +96,36 @@
 .login-signup, .login-signin {
   font-size: 16px;
   list-style-type: none;
+  transition: 0.2s ease;
 }
 
 .login-signup:hover, .login-signin:hover {
   cursor: pointer;
   color: rgb(102, 125, 255);
+}
+
+.profile-dropdown-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-dropdown-buttons > button {
+  width: 80px;
+  height: 25px;
+  border-radius: 6px;
+  box-shadow: 0px 3px 4px rgba(120, 165, 210, 0.5);
+  border: none;
+  cursor: pointer;
+  color: black;
+  font-size: 13px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 8px;
+  transition: 0.2s ease;
+}
+
+.profile-dropdown-buttons > button:hover {
+  background-color: rgb(214, 233, 250);
 }
 
 .logged-in-dropdown-wrapper {
@@ -116,8 +141,4 @@
   font-size: 14px;
   list-style-type: none;
   margin: 1px 10px;
-}
-
-.logout-btn {
-  margin-top: 10px;
 }

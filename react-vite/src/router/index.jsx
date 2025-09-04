@@ -1,12 +1,14 @@
 import { createBrowserRouter } from 'react-router-dom';
-import LoginFormPage from '../components/LoginFormPage';
-import SignupFormPage from '../components/SignupFormPage';
-import LandingPage from '../components/LandingPage';
-import SiteListPage from '../components/SiteListPage'
-import SiteDetailsPage from '../components/SiteDetailsPage';
-import TagsPage from '../components/TagsPage';
-import AddSite from '../components/AddSitePage';
 import Layout from './Layout';
+
+import AddSite from '../components/AddSitePage';
+import LandingPage from '../components/LandingPage';
+import LoginFormPage from '../components/LoginFormPage';
+import ProfilePage from '../components/ProfilePage';
+import SignupFormPage from '../components/SignupFormPage';
+import SiteDetailsPage from '../components/SiteDetailsPage';
+import SiteListPage from '../components/SiteListPage'
+import TagsPage from '../components/TagsPage';
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginFormPage />,
+      },
+      {
+        path: "/profile",
+        element: <ProfilePage />
       },
       {
         path: "signup",

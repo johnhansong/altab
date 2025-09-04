@@ -82,11 +82,13 @@ const SiteDetailsPage = () => {
                   </span>
                 )
               })}
+              {currSite.id == userId &&
                 <OpenModalButton
                   className='site-details-tag add-tag-button'
                   buttonText="+"
                   modalComponent={<AddTagModal />}
                 ></OpenModalButton>
+              }
               </p>
 
             </div>

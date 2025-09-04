@@ -6,6 +6,8 @@ import { fetchAllSites } from '../../redux/websiteReducer'
 import { fetchAllTags } from '../../redux/tagsReducer';
 import SiteContainer from '../SiteContainer';
 import { limitString } from '../../../bandaid';
+import OpenModalButton from '../OpenModalButton';
+import LoginFormModal from '../LoginFormModal';
 
 import './SiteListPage.css'
 
@@ -19,6 +21,7 @@ const SiteListPage = () => {
   const allTagsObj = useSelector((state) => state.tags.allTags || {});
   const allTags = useMemo(() => Object.values(allTagsObj), [allTagsObj]);
   const websitesObjValue = Object.values(websites);
+  const sessionUser = useSelector((state) => state.session.user)
 
   const [filterTag, setFilterTag] = useState(initialTag);
   const [sortBy, setSortBy] = useState('');
@@ -135,10 +138,19 @@ const SiteListPage = () => {
           </select>
         </div>
 
-        <button
-          className="post-site-btn"
-          onClick={() => navigate("/sites/add")}
-        >Post a Website</button>
+        { sessionUser ?
+          <button
+            className="post-site-btn"
+            onClick={() => navigate("/sites/add")}
+            >Post a Website
+          </button>
+          :
+          <OpenModalButton
+            className="post-site-btn"
+            modalComponent={<LoginFormModal />}
+            buttonText="Post a Website"
+          ></OpenModalButton>
+        }
 
 
       </div>

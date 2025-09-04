@@ -1,8 +1,13 @@
 // Database Migration and Seeder Commands;
 
+// updating backend
 // pipenv run flask db migrate (!if applicable) -m "create tables"
 // pipenv run flask db upgrade
 // pipenv run flask seed all
+
+//updating frontend
+// npm ci
+// npm run build
 
 // Running frontend: npm run dev
 // running backend with flask: flask run
